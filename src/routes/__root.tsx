@@ -11,25 +11,34 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
+    <div className="flex min-h-[60vh] items-center justify-center px-4 py-24">
+        <div className="max-w-md text-center">
+          <div className="tracking-ui text-muted-foreground">404 · No encontrado</div>
+          <h1 className="mt-3 font-display text-5xl">Esta página no existe</h1>
+          <p className="mt-3 text-sm text-muted-foreground">
+            El contenido puede haberse movido. Volvé a la home o explorá las fragancias.
+          </p>
+          <div className="mt-6 flex justify-center gap-2">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center bg-graphite px-4 py-2.5 text-xs tracking-ui text-warm-white hover:bg-foreground"
+            >
+              Volver a Home
+            </Link>
+            <Link
+              to="/fragancias"
+              className="inline-flex items-center justify-center border border-graphite px-4 py-2.5 text-xs tracking-ui text-graphite hover:bg-graphite hover:text-warm-white"
+            >
+              Ver fragancias
+            </Link>
+          </div>
         </div>
-      </div>
     </div>
   );
 }
@@ -77,19 +86,37 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "OMMI — Casa de fragancias accesible" },
+      {
+        name: "description",
+        content:
+          "Fragancias de alta concentración organizadas por momento, intensidad y estilo. Probá antes de elegir con Discovery Sets y OMMI Finder.",
+      },
+      { name: "author", content: "OMMI" },
+      { property: "og:site_name", content: "OMMI" },
+      { property: "og:title", content: "OMMI — Casa de fragancias accesible" },
+      {
+        property: "og:description",
+        content:
+          "Extrait de Parfum, trazabilidad por lote y sistema de elección olfativa. Probá antes de comprar.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -119,8 +146,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="flex min-h-screen flex-col bg-background text-foreground">
+        <Navbar />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <Footer />
+        <WhatsAppFloat />
+      </div>
     </QueryClientProvider>
   );
 }
