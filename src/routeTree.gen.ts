@@ -9,168 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SeguridadYTrazabilidadRouteImport } from './routes/seguridad-y-trazabilidad'
-import { Route as RegaloRouteImport } from './routes/regalo'
-import { Route as GuiaOlfativaRouteImport } from './routes/guia-olfativa'
-import { Route as FinderRouteImport } from './routes/finder'
-import { Route as DiscoverySetsRouteImport } from './routes/discovery-sets'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as FraganciasIndexRouteImport } from './routes/fragancias.index'
-import { Route as FraganciasIdRouteImport } from './routes/fragancias.$id'
 
-const SeguridadYTrazabilidadRoute = SeguridadYTrazabilidadRouteImport.update({
-  id: '/seguridad-y-trazabilidad',
-  path: '/seguridad-y-trazabilidad',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegaloRoute = RegaloRouteImport.update({
-  id: '/regalo',
-  path: '/regalo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GuiaOlfativaRoute = GuiaOlfativaRouteImport.update({
-  id: '/guia-olfativa',
-  path: '/guia-olfativa',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FinderRoute = FinderRouteImport.update({
-  id: '/finder',
-  path: '/finder',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DiscoverySetsRoute = DiscoverySetsRouteImport.update({
-  id: '/discovery-sets',
-  path: '/discovery-sets',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FraganciasIndexRoute = FraganciasIndexRouteImport.update({
-  id: '/fragancias/',
-  path: '/fragancias/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FraganciasIdRoute = FraganciasIdRouteImport.update({
-  id: '/fragancias/$id',
-  path: '/fragancias/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/discovery-sets': typeof DiscoverySetsRoute
-  '/finder': typeof FinderRoute
-  '/guia-olfativa': typeof GuiaOlfativaRoute
-  '/regalo': typeof RegaloRoute
-  '/seguridad-y-trazabilidad': typeof SeguridadYTrazabilidadRoute
-  '/fragancias/$id': typeof FraganciasIdRoute
-  '/fragancias/': typeof FraganciasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/discovery-sets': typeof DiscoverySetsRoute
-  '/finder': typeof FinderRoute
-  '/guia-olfativa': typeof GuiaOlfativaRoute
-  '/regalo': typeof RegaloRoute
-  '/seguridad-y-trazabilidad': typeof SeguridadYTrazabilidadRoute
-  '/fragancias/$id': typeof FraganciasIdRoute
-  '/fragancias': typeof FraganciasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/discovery-sets': typeof DiscoverySetsRoute
-  '/finder': typeof FinderRoute
-  '/guia-olfativa': typeof GuiaOlfativaRoute
-  '/regalo': typeof RegaloRoute
-  '/seguridad-y-trazabilidad': typeof SeguridadYTrazabilidadRoute
-  '/fragancias/$id': typeof FraganciasIdRoute
-  '/fragancias/': typeof FraganciasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/discovery-sets'
-    | '/finder'
-    | '/guia-olfativa'
-    | '/regalo'
-    | '/seguridad-y-trazabilidad'
-    | '/fragancias/$id'
-    | '/fragancias/'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/discovery-sets'
-    | '/finder'
-    | '/guia-olfativa'
-    | '/regalo'
-    | '/seguridad-y-trazabilidad'
-    | '/fragancias/$id'
-    | '/fragancias'
-  id:
-    | '__root__'
-    | '/'
-    | '/discovery-sets'
-    | '/finder'
-    | '/guia-olfativa'
-    | '/regalo'
-    | '/seguridad-y-trazabilidad'
-    | '/fragancias/$id'
-    | '/fragancias/'
+  to: '/'
+  id: '__root__' | '/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DiscoverySetsRoute: typeof DiscoverySetsRoute
-  FinderRoute: typeof FinderRoute
-  GuiaOlfativaRoute: typeof GuiaOlfativaRoute
-  RegaloRoute: typeof RegaloRoute
-  SeguridadYTrazabilidadRoute: typeof SeguridadYTrazabilidadRoute
-  FraganciasIdRoute: typeof FraganciasIdRoute
-  FraganciasIndexRoute: typeof FraganciasIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/seguridad-y-trazabilidad': {
-      id: '/seguridad-y-trazabilidad'
-      path: '/seguridad-y-trazabilidad'
-      fullPath: '/seguridad-y-trazabilidad'
-      preLoaderRoute: typeof SeguridadYTrazabilidadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/regalo': {
-      id: '/regalo'
-      path: '/regalo'
-      fullPath: '/regalo'
-      preLoaderRoute: typeof RegaloRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/guia-olfativa': {
-      id: '/guia-olfativa'
-      path: '/guia-olfativa'
-      fullPath: '/guia-olfativa'
-      preLoaderRoute: typeof GuiaOlfativaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/finder': {
-      id: '/finder'
-      path: '/finder'
-      fullPath: '/finder'
-      preLoaderRoute: typeof FinderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/discovery-sets': {
-      id: '/discovery-sets'
-      path: '/discovery-sets'
-      fullPath: '/discovery-sets'
-      preLoaderRoute: typeof DiscoverySetsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -178,43 +48,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/fragancias/': {
-      id: '/fragancias/'
-      path: '/fragancias'
-      fullPath: '/fragancias/'
-      preLoaderRoute: typeof FraganciasIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/fragancias/$id': {
-      id: '/fragancias/$id'
-      path: '/fragancias/$id'
-      fullPath: '/fragancias/$id'
-      preLoaderRoute: typeof FraganciasIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DiscoverySetsRoute: DiscoverySetsRoute,
-  FinderRoute: FinderRoute,
-  GuiaOlfativaRoute: GuiaOlfativaRoute,
-  RegaloRoute: RegaloRoute,
-  SeguridadYTrazabilidadRoute: SeguridadYTrazabilidadRoute,
-  FraganciasIdRoute: FraganciasIdRoute,
-  FraganciasIndexRoute: FraganciasIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

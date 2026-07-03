@@ -11,9 +11,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 
 function NotFoundComponent() {
   return (
@@ -86,37 +83,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "OMMI — Casa de fragancias accesible" },
-      {
-        name: "description",
-        content:
-          "Fragancias de alta concentración organizadas por momento, intensidad y estilo. Probá antes de elegir con Discovery Sets y OMMI Finder.",
-      },
-      { name: "author", content: "OMMI" },
-      { property: "og:site_name", content: "OMMI" },
-      { property: "og:title", content: "OMMI — Casa de fragancias accesible" },
-      {
-        property: "og:description",
-        content:
-          "Extrait de Parfum, trazabilidad por lote y sistema de elección olfativa. Probá antes de comprar.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { title: "Lovable App" },
+      { name: "description", content: "Start building your app." },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
-      },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -147,12 +120,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col bg-background text-foreground">
-        <Navbar />
         <main className="flex-1">
           <Outlet />
         </main>
-        <Footer />
-        <WhatsAppFloat />
       </div>
     </QueryClientProvider>
   );
