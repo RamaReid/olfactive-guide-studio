@@ -11,9 +11,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 
 function NotFoundComponent() {
   return (
@@ -147,12 +144,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col bg-background text-foreground">
-        <Navbar />
         <main className="flex-1">
           <Outlet />
         </main>
-        <Footer />
-        <WhatsAppFloat />
       </div>
     </QueryClientProvider>
   );
