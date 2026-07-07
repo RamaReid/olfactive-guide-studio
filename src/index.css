@@ -2342,8 +2342,8 @@ button {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr) auto;
     column-gap: 12px;
-    row-gap: 8px;
-    padding: 56px 12px 12px;
+    row-gap: 6px;
+    padding: 48px 12px 8px;
     overflow: hidden;
     height: 100svh;
     min-height: 100svh;
@@ -2376,7 +2376,7 @@ button {
   }
 
   .category-cylinder-shell {
-    transform: scale(0.48);
+    transform: scale(0.42);
     transform-origin: center;
   }
 
@@ -2401,9 +2401,9 @@ button {
   }
 
   .tube-cylinder-shell {
-    --tube-item-width: clamp(120px, 24vw, 180px);
-    --tube-visual-half-width: clamp(60px, 12vw, 90px);
-    min-height: clamp(280px, 55vh, 460px);
+    --tube-item-width: clamp(100px, 20vw, 160px);
+    --tube-visual-half-width: clamp(50px, 10vw, 80px);
+    min-height: clamp(220px, 44vh, 380px);
     padding-inline: clamp(6px, 2vw, 14px);
     overflow: visible;
     scrollbar-width: none;
@@ -2428,15 +2428,36 @@ button {
     display: none;
   }
 
-  /* Descripción corta abajo, cruzando las dos columnas */
+  /* La descripción vive dentro de .selector-panel (columna derecha), pero
+     necesitamos que ocupe todo el ancho inferior y no la corte el overflow
+     del stage. La sacamos del flujo con posicionamiento absoluto, anclada
+     al pie de la columna izquierda para no chocar con el cookie banner
+     (bottom-right). */
+  .catalog-stage {
+    position: relative;
+  }
+
+  .catalog-stage > .selector-panel {
+    overflow: visible;
+    position: static !important;
+  }
+
+  .catalog-stage .tube-cylinder-shell {
+    position: static !important;
+    overflow: visible;
+  }
+
   .catalog-stage .active-tube-description {
-    grid-column: 1 / -1;
-    grid-row: 3;
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 0 8px 8px;
-    text-align: center;
-    gap: 4px;
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    width: min(52%, 420px);
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    gap: 2px;
+    z-index: 5;
+    pointer-events: none;
   }
 
   .active-tube-description .active-tube-number {
@@ -2454,9 +2475,13 @@ button {
     opacity: .85;
   }
 
-  /* Ocultar el párrafo largo, dejar solo número + familia + meta */
+  /* Mostrar la descripción completa (número, familia, meta y párrafo) */
   .active-tube-description p {
-    display: none;
+    display: block;
+    font-size: clamp(11px, 1.6vw, 14px);
+    line-height: 1.35;
+    opacity: .85;
+    margin: 4px 0 0;
   }
 
   .active-tube-description span:not(.active-tube-number):not(.active-tube-meta) {
