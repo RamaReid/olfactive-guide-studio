@@ -17,6 +17,8 @@ export function PackageHint({ line }: PackageHintProps) {
           className="package-image"
           src={line.assets.boxHint}
           alt=""
+          loading="lazy"
+          decoding="async"
           onError={() => setHasImageError(true)}
         />
       ) : null}

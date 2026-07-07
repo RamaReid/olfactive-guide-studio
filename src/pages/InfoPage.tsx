@@ -30,6 +30,8 @@ export function InfoPage({ kicker, title, body, artwork }: InfoPageProps) {
             <img
               src={artwork?.src ?? '/ommi_other/OMMI Firma.webp'}
               alt={artwork?.alt ?? ''}
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
