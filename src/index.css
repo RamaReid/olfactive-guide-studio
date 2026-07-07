@@ -2442,6 +2442,11 @@ button {
     position: static !important;
   }
 
+  .catalog-stage .tube-cylinder-shell {
+    position: static !important;
+    overflow: visible;
+  }
+
   .catalog-stage .active-tube-description {
     position: absolute;
     left: 12px;
