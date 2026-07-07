@@ -2337,16 +2337,20 @@ button {
    ===================================================================== */
 @media (min-width: 641px) and (max-width: 1120px),
        (orientation: landscape) and (max-height: 500px) and (max-width: 1120px) {
-  /* --- Escenario principal: dos cilindros uno al lado del otro --- */
+  /* --- Escenario principal: dos cilindros uno al lado del otro ---
+     Contenedor con altura fija tipo móvil apaisado (~400px). El resto
+     de la página fluye normalmente debajo. */
   .catalog-stage {
+    position: relative;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
     column-gap: 12px;
     row-gap: 6px;
-    padding: 48px 12px 8px;
+    padding: 48px 12px 12px;
     overflow: hidden;
-    height: 100svh;
-    min-height: 100svh;
+    height: min(100svh, 440px);
+    min-height: min(100svh, 360px);
+    max-height: 440px;
   }
 
   /* Header overlay ocupa toda la fila superior */
@@ -2380,13 +2384,15 @@ button {
     transform-origin: center;
   }
 
-  /* Tubos: columna derecha (selector-panel envuelve al TubeRack) */
+  /* Tubos: columna derecha. Flex column para apilar cilindro + descripción. */
   .selector-panel {
     grid-column: 2;
     grid-row: 2;
+    position: relative;
     display: flex;
-    align-self: center;
-    justify-self: center;
+    flex-direction: column;
+    align-self: stretch;
+    justify-self: stretch;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -2394,18 +2400,23 @@ button {
     min-height: 0;
     overflow: hidden;
     padding: 0;
+    gap: 6px;
   }
 
   .selector-panel .tube-cylinder-shell {
     width: 100%;
+    flex: 1 1 0;
+    min-height: 0;
   }
 
   .tube-cylinder-shell {
     --tube-item-width: clamp(100px, 20vw, 160px);
     --tube-visual-half-width: clamp(50px, 10vw, 80px);
-    min-height: clamp(220px, 44vh, 380px);
+    min-height: 0;
+    height: 100%;
+    max-height: 100%;
     padding-inline: clamp(6px, 2vw, 14px);
-    overflow: visible;
+    overflow: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -2428,65 +2439,36 @@ button {
     display: none;
   }
 
-  /* La descripción vive dentro de .selector-panel (columna derecha), pero
-     necesitamos que ocupe todo el ancho inferior y no la corte el overflow
-     del stage. La sacamos del flujo con posicionamiento absoluto, anclada
-     al pie de la columna izquierda para no chocar con el cookie banner
-     (bottom-right). */
-  .catalog-stage {
-    position: relative;
-  }
-
-  .catalog-stage > .selector-panel {
-    overflow: visible;
-    position: static !important;
-  }
-
-  .catalog-stage .tube-cylinder-shell {
-    position: static !important;
-    overflow: visible;
-  }
-
+  /* Descripción corta: SOLO Nº + descriptor (2 líneas), debajo del cilindro
+     derecho, en el flujo de .selector-panel. */
   .catalog-stage .active-tube-description {
-    position: absolute;
-    left: 12px;
-    bottom: 12px;
-    width: min(52%, 420px);
+    position: static;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 100%;
     margin: 0;
-    padding: 0;
-    text-align: left;
+    padding: 0 12px 4px;
+    text-align: center;
     gap: 2px;
-    z-index: 5;
-    pointer-events: none;
   }
 
-  .active-tube-description .active-tube-number {
+  .catalog-stage .active-tube-description .active-tube-number {
     display: block;
-    font-size: clamp(18px, 3.2vw, 24px);
+    font-size: clamp(16px, 2.4vw, 22px);
+    line-height: 1.1;
   }
 
-  .active-tube-description strong {
-    font-size: clamp(16px, 2.6vw, 22px);
-  }
-
-  .active-tube-description .active-tube-meta {
+  .catalog-stage .active-tube-description strong {
     display: block;
-    font-size: clamp(12px, 1.8vw, 15px);
-    opacity: .85;
+    font-size: clamp(14px, 2vw, 20px);
+    line-height: 1.15;
   }
 
-  /* Mostrar la descripción completa (número, familia, meta y párrafo) */
-  .active-tube-description p {
-    display: block;
-    font-size: clamp(11px, 1.6vw, 14px);
-    line-height: 1.35;
-    opacity: .85;
-    margin: 4px 0 0;
-  }
-
-  .active-tube-description span:not(.active-tube-number):not(.active-tube-meta) {
-    font-size: clamp(12px, 1.8vw, 14px);
-    opacity: .8;
+  /* Ocultar todo lo demás: meta, párrafo largo, spans extra */
+  .catalog-stage .active-tube-description .active-tube-meta,
+  .catalog-stage .active-tube-description p,
+  .catalog-stage .active-tube-description span:not(.active-tube-number) {
+    display: none;
   }
 
   /* --- Grillas de sección: 3 cards por fila --- */
