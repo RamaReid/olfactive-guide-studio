@@ -2428,16 +2428,30 @@ button {
     display: none;
   }
 
-  /* Descripción corta: columna izquierda para no chocar con el cookie
-     banner que vive abajo a la derecha */
+  /* La descripción vive dentro de .selector-panel (columna derecha), pero
+     necesitamos que ocupe todo el ancho inferior y no la corte el overflow
+     del stage. La sacamos del flujo con posicionamiento absoluto, anclada
+     al pie de la columna izquierda para no chocar con el cookie banner
+     (bottom-right). */
+  .catalog-stage {
+    position: relative;
+  }
+
+  .selector-panel {
+    overflow: visible;
+  }
+
   .catalog-stage .active-tube-description {
-    grid-column: 1;
-    grid-row: 3;
-    max-width: 100%;
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    width: min(52%, 420px);
     margin: 0;
-    padding: 0 12px 8px;
-    text-align: center;
-    gap: 4px;
+    padding: 0;
+    text-align: left;
+    gap: 2px;
+    z-index: 5;
+    pointer-events: none;
   }
 
   .active-tube-description .active-tube-number {
