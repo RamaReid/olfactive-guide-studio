@@ -1,53 +1,32 @@
-# Plan: Home responsive (mobile-first) sin tocar desktop
+# Plan: Correcciones mobile consolidadas
 
-## Regla dura
-El look actual en desktop (≥1024px de ancho) queda **idéntico**. Todos los cambios se aplican vía media queries `@media (max-width: 1023.98px)` o menores. No se modifica ninguna regla CSS existente que aplique en desktop, ni el markup que ya renderiza correctamente arriba de 1024px.
+## Alcance
+Solo mobile (`@media (max-width: 640px)`). Desktop y tablet intactos.
 
-## Alcance (solo Home)
-`CatalogStage`, `BottleCarousel`, `TubeRack`, `LineIndicator`, `FloatingHeader`, `ConjuntosOmmiSection`, `ExpandedOmmiSections`, `SiteFooter`.
+## 1. Carrusel de botellas (infinito, 7 líneas)
+- En `BottleCarousel.tsx`: agregar `data-distance={distance}` al botón.
+- En `src/index.css` `@media (max-width: 640px)`: convertir el cilindro 3D en carrusel plano horizontal.
+  - Card central (`data-distance="0"`): tamaño completo.
+  - Dos cards vecinas (`data-distance="1"` y `"-1"`): asoman por detrás, más chicas, opacidad reducida, blur suave.
+  - Resto: ocultas.
+  - Loop infinito: se mantiene la lógica existente.
 
-Fuera: `LineCatalogPage`, `ProductPage`, `AudiencePerfumesPage`, `DiscoveryPage`, `InfoPage`, `PerfumesPage`.
+## 2. Ocultar LineIndicator en mobile
+- `.line-indicator { display: none; }` dentro del mismo media query.
+- Motivo: la categoría ya se lee en la etiqueta de la botella.
 
-## Estrategia
-Mobile-first fluido **por debajo** de 1024px:
-- Tablet: `@media (max-width: 1023.98px)` — layout de una columna, ajustes generales.
-- Mobile: `@media (max-width: 640px)` — refinamientos de tipografía, spacing y orientación de rack.
-- Dentro de cada bloque mobile/tablet se usa `clamp()` para escalar fluidamente sin más breakpoints.
+## 3. Cilindro de tubos más chico
+- Reducir `--tube-item-width` a ~68vw y `min-height` del stage.
+- Ocultar la referencia y la descripción larga; mostrar solo el número y la familia.
+- Ocultar scrollbar horizontal del rack con `scrollbar-width: none` y `::-webkit-scrollbar { display: none }`.
 
-Las reglas desktop existentes (fuera de media query) se dejan intactas; solo se **agregan** bloques nuevos al final de `src/index.css` (y `src/App.css` si aplica).
+## 4. Destacados: 2 cards por fila
+- Cambiar `.ommi-featured-grid` a `grid-template-columns: repeat(2, minmax(0, 1fr))`.
+- Reducir tipografía y padding interno proporcionalmente para respetar la forma del card de pantalla completa.
 
-## Cambios por bloque (todos dentro de media queries <1024px)
-
-### CatalogStage
-- Grid pasa de 2 columnas a 1 columna apilada: BottleCarousel arriba (~55svh), TubeRack abajo con scroll interno.
-- `min-height: 100svh` conservado.
-
-### BottleCarousel
-- Radio del carrusel reducido con `clamp()` para que las botellas laterales no queden cortadas.
-- Se hace vía CSS custom property `--carousel-radius` leída desde el componente; el default desktop se mantiene 285px, solo cambia dentro de media query.
-
-### TubeRack
-- Mobile: rack horizontal con `scroll-snap-x` en vez de vertical.
-- Tamaños con `clamp()`.
-
-### FloatingHeader
-- Padding y tipografía reducidos; nav colapsa a menú simple si no entra.
-
-### ConjuntosOmmiSection + ExpandedOmmiSections
-- Grids (`ommi-featured-grid`, `ommi-explore-grid`, `ommi-testimonial-grid`) pasan a 1–2 columnas con `auto-fit minmax`.
-- `ommi-social-copy` / `ommi-social-media` apilan.
-- Newsletter apila input y botón.
-- Headings con `clamp()` dentro del media query.
-
-### SiteFooter
-- Columnas apilan; padding y tipografía reducidos.
-
-## Detalles técnicos
-- Cambios exclusivamente aditivos en `src/index.css` (bloque nuevo al final: "Responsive <1024px").
-- Ajuste mínimo en `BottleCarousel.tsx`: leer el radio desde CSS var (`getComputedStyle`) para que el media query pueda achicarlo. Default y comportamiento desktop no cambian.
-- Sin cambios de datos, rutas ni lógica.
+## Archivos a modificar
+- `src/components/catalog-stage/BottleCarousel.tsx`
+- `src/index.css`
 
 ## Verificación
-Playwright headless a `localhost:8080`:
-1. Screenshot en 1440×900 antes/después → diff visual = 0 diferencias en desktop.
-2. Screenshots en 1024, 768, 375 para validar el responsive.
+Playwright a 390×844: screenshots de home completa, carrusel en 3 posiciones consecutivas, rack de tubos, sección Destacados. Screenshot 1440×900 para confirmar desktop sin cambios.

@@ -150,6 +150,7 @@ export function BottleCarousel({
                 type="button"
                 className="category-bottle"
                 data-active={active}
+                data-distance={distance}
                 aria-pressed={active}
                 aria-disabled={!active}
                 aria-label={line.name}
