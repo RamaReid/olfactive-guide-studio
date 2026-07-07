@@ -48,6 +48,7 @@ const circularDistance = (index: number, activeIndex: number, total: number) => 
 
 const wheelThrottleMs = 920
 const wheelDeltaThreshold = 8
+const touchStepPx = 48
 const isInsideCylinderCenter = (stage: HTMLElement, event: WheelEvent) => {
   const bounds = stage.getBoundingClientRect()
   const captureWidth = Math.min(bounds.width * 0.72, 760)
@@ -68,6 +69,10 @@ export function BottleCarousel({
 }: BottleCarouselProps) {
   const stageRef = useRef<HTMLElement>(null)
   const lastWheelTimeRef = useRef(0)
+  const touchActiveRef = useRef(false)
+  const touchStartXRef = useRef<number | null>(null)
+  const touchStartYRef = useRef<number | null>(null)
+  const touchAccumRef = useRef(0)
   const navigate = useNavigate()
   const activeIndex = lines.findIndex((line) => line.id === activeLineId)
   const visibleLines = lines.map((line, index) => ({
@@ -126,8 +131,70 @@ export function BottleCarousel({
 
     stage.addEventListener('wheel', handleWheel, { passive: false })
 
+    const isInsideCenterTouch = (touch: Touch) => {
+      const bounds = stage.getBoundingClientRect()
+      const captureWidth = Math.min(bounds.width * 0.85, 760)
+      const captureHeight = Math.min(bounds.height * 0.85, 720)
+      const centerX = bounds.left + bounds.width / 2
+      const centerY = bounds.top + bounds.height / 2
+      return (
+        Math.abs(touch.clientX - centerX) <= captureWidth / 2 &&
+        Math.abs(touch.clientY - centerY) <= captureHeight / 2
+      )
+    }
+
+    const handleTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0]
+      if (!touch || !isInsideCenterTouch(touch)) {
+        touchActiveRef.current = false
+        return
+      }
+      touchActiveRef.current = true
+      touchStartXRef.current = touch.clientX
+      touchStartYRef.current = touch.clientY
+      touchAccumRef.current = 0
+    }
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!touchActiveRef.current) return
+      const touch = event.touches[0]
+      if (!touch || touchStartXRef.current === null || touchStartYRef.current === null) return
+
+      const dx = touch.clientX - touchStartXRef.current
+      const dy = touch.clientY - touchStartYRef.current
+      const delta = Math.abs(dx) >= Math.abs(dy) ? dx : dy
+
+      event.preventDefault()
+
+      const advance = touchAccumRef.current - delta
+      const steps = Math.trunc(advance / touchStepPx)
+      if (steps === 0) return
+
+      touchStartXRef.current = touch.clientX
+      touchStartYRef.current = touch.clientY
+      touchAccumRef.current = advance - steps * touchStepPx
+
+      advanceLine(steps > 0 ? 1 : -1)
+    }
+
+    const handleTouchEnd = () => {
+      touchActiveRef.current = false
+      touchStartXRef.current = null
+      touchStartYRef.current = null
+      touchAccumRef.current = 0
+    }
+
+    stage.addEventListener('touchstart', handleTouchStart, { passive: true })
+    stage.addEventListener('touchmove', handleTouchMove, { passive: false })
+    stage.addEventListener('touchend', handleTouchEnd)
+    stage.addEventListener('touchcancel', handleTouchEnd)
+
     return () => {
       stage.removeEventListener('wheel', handleWheel)
+      stage.removeEventListener('touchstart', handleTouchStart)
+      stage.removeEventListener('touchmove', handleTouchMove)
+      stage.removeEventListener('touchend', handleTouchEnd)
+      stage.removeEventListener('touchcancel', handleTouchEnd)
     }
   }, [activeIndex, advanceLine, lines.length])
 
