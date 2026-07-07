@@ -2354,6 +2354,22 @@ button {
     max-height: min(100svh, 520px);
   }
 
+  /* Blur inferior: cubre el 25% inferior del stage y se disuelve hacia arriba */
+  .catalog-stage::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 25%;
+    pointer-events: none;
+    z-index: 3;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+  }
+
   /* Botellas: columna izquierda (55%) */
   .selector-visual-stage {
     grid-column: 1;
@@ -2441,7 +2457,7 @@ button {
      eje vertical con el borde del tubo. */
   .catalog-stage .active-tube-description {
     position: absolute;
-    left: 0;
+    left: 50%;
     right: auto;
     bottom: clamp(4px, 1vh, 12px);
     z-index: 260;
