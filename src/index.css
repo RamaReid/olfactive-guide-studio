@@ -24,6 +24,8 @@
 html {
   overflow-x: hidden;
   background: #0b0c0c;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 body {
@@ -31,6 +33,15 @@ body {
   min-width: 320px;
   min-height: 100svh;
   margin: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 button,
