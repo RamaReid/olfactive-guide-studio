@@ -2337,35 +2337,27 @@ button {
    ===================================================================== */
 @media (min-width: 641px) and (max-width: 1120px),
        (orientation: landscape) and (max-height: 500px) and (max-width: 1120px) {
-  /* --- Escenario principal: dos cilindros uno al lado del otro ---
-     Contenedor con altura fija tipo móvil apaisado (~400px). El resto
-     de la página fluye normalmente debajo. */
+  /* --- Layout como desktop (55/45) con menos texto ---
+     Stage acotado en alto para que el cilindro no se estire y los tubos
+     queden juntos (Gestalt: proximidad → cilindro como unidad). */
   .catalog-stage {
     position: relative;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-    column-gap: 12px;
-    row-gap: 6px;
-    padding: 48px 12px 12px;
+    grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
+    grid-template-rows: 1fr;
+    column-gap: 0;
+    row-gap: 0;
+    padding: 0;
     overflow: hidden;
-    height: min(100svh, 440px);
-    min-height: min(100svh, 360px);
-    max-height: 440px;
+    height: min(100svh, 520px);
+    min-height: min(100svh, 380px);
+    max-height: 520px;
   }
 
-  /* Header overlay ocupa toda la fila superior */
-  .catalog-stage > .header-overlay {
-    grid-column: 1 / -1;
-    grid-row: 1;
-  }
-
-  /* Botellas: columna izquierda */
+  /* Botellas: columna izquierda (55%) */
   .selector-visual-stage {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 1;
     display: flex;
-    align-self: center;
-    justify-self: center;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -2380,51 +2372,55 @@ button {
   }
 
   .category-cylinder-shell {
-    transform: scale(0.42);
+    transform: scale(0.3);
     transform-origin: center;
   }
 
-  /* Tubos: columna derecha. Flex column para apilar cilindro + descripción. */
+  /* Tubos: columna derecha (45%). Vuelve a la lógica desktop:
+     .active-tube-description es absolute dentro de .tube-cylinder-shell. */
   .selector-panel {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 1;
     position: relative;
     display: flex;
     flex-direction: column;
-    align-self: stretch;
-    justify-self: stretch;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
     min-height: 0;
     overflow: hidden;
-    padding: 0;
-    gap: 6px;
+    padding: clamp(40px, 6vw, 64px) clamp(16px, 3vw, 32px)
+             clamp(20px, 3vw, 36px);
+    gap: 0;
   }
 
   .selector-panel .tube-cylinder-shell {
     width: 100%;
-    flex: 1 1 0;
-    min-height: 0;
   }
 
+  /* Cilindro más compacto: reduce stageHeight → radiusY menor →
+     tubos más juntos (proximidad Gestalt). */
   .tube-cylinder-shell {
-    --tube-item-width: clamp(100px, 20vw, 160px);
-    --tube-visual-half-width: clamp(50px, 10vw, 80px);
+    --tube-item-width: clamp(220px, 30vw, 320px);
+    --tube-visual-half-width: clamp(110px, 15vw, 160px);
+    height: clamp(240px, 38vh, 340px);
     min-height: 0;
-    height: 100%;
     max-height: 100%;
-    padding-inline: clamp(6px, 2vw, 14px);
-    overflow: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    padding-inline: 0;
   }
 
   .tube-cylinder-shell::-webkit-scrollbar,
   .tube-cylinder-stage::-webkit-scrollbar,
   .tube-cylinder-track::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Reducir el gradiente/blur ::after para que no tape los tubos
+     cuando el shell es más compacto. */
+  .tube-cylinder-shell::after {
+    height: clamp(60px, 12vh, 110px);
+    backdrop-filter: none;
   }
 
   .tube-cylinder-stage,
@@ -2434,37 +2430,44 @@ button {
     -ms-overflow-style: none;
   }
 
-  /* Igual que mobile: sin chips DÍA/NOCHE/... */
+  /* Sin chips DÍA/NOCHE/... (menos texto) */
   .line-indicator {
     display: none;
   }
 
-  /* Descripción corta: SOLO Nº + descriptor (2 líneas), debajo del cilindro
-     derecho, en el flujo de .selector-panel. */
+  /* Descripción anclada a la base del cilindro, alineada al borde
+     izquierdo del tubo central: Nº7 y Floral oriental dulce comparten
+     eje vertical con el borde del tubo. */
   .catalog-stage .active-tube-description {
-    position: static;
-    flex: 0 0 auto;
-    width: 100%;
-    max-width: 100%;
+    position: absolute;
+    left: calc(50% - var(--tube-visual-half-width));
+    bottom: clamp(10px, 2vh, 20px);
+    z-index: 260;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 4px;
+    width: auto;
+    max-width: min(80%, 320px);
     margin: 0;
-    padding: 0 12px 4px;
-    text-align: center;
-    gap: 2px;
+    padding: 0;
+    pointer-events: none;
   }
 
   .catalog-stage .active-tube-description .active-tube-number {
     display: block;
-    font-size: clamp(16px, 2.4vw, 22px);
-    line-height: 1.1;
+    font-size: clamp(20px, 2.6vw, 28px);
+    line-height: 1;
   }
 
   .catalog-stage .active-tube-description strong {
     display: block;
-    font-size: clamp(14px, 2vw, 20px);
-    line-height: 1.15;
+    font-size: clamp(18px, 2.2vw, 26px);
+    line-height: 1.05;
   }
 
-  /* Ocultar todo lo demás: meta, párrafo largo, spans extra */
+  /* Ocultar meta, párrafo y spans extra: solo Nº + descriptor */
   .catalog-stage .active-tube-description .active-tube-meta,
   .catalog-stage .active-tube-description p,
   .catalog-stage .active-tube-description span:not(.active-tube-number) {
