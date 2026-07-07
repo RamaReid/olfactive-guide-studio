@@ -9,6 +9,7 @@ import {
 } from '../../data/ommiContent'
 import { getLineById, ommiFragrances } from '../../data/ommiCatalog'
 import { SiteFooter } from '../layout/SiteFooter'
+import ommiVideo from '../../../public/ommi_other/OMMI.mp4.asset.json'
 
 const highlightedProducts = highlightedProductNumbers
   .map((number) =>
