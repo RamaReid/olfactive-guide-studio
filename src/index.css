@@ -2454,9 +2454,13 @@ button {
     opacity: .85;
   }
 
-  /* Ocultar el párrafo largo, dejar solo número + familia + meta */
+  /* Mostrar la descripción completa (número, familia, meta y párrafo) */
   .active-tube-description p {
-    display: none;
+    display: block;
+    font-size: clamp(11px, 1.6vw, 14px);
+    line-height: 1.35;
+    opacity: .85;
+    margin: 4px 0 0;
   }
 
   .active-tube-description span:not(.active-tube-number):not(.active-tube-meta) {
