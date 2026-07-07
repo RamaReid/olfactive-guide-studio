@@ -319,65 +319,67 @@ export function TubeRack({
     activeFragrance
 
   return (
-    <section className="tube-cylinder-shell" aria-label="Cilindro horizontal de tubos">
-      <div className="tube-cylinder-stage" ref={stageRef}>
-        <div className="tube-cylinder-track">
-          {visibleFragrances.map(({ fragrance, distance }) => {
-            const isActive = fragrance.id === activeFragrance.id
-            const state = getTubeCylinderState(distance, stageHeight, isCylinderSettled, isCompact)
+    <>
+      <section className="tube-cylinder-shell" aria-label="Cilindro horizontal de tubos">
+        <div className="tube-cylinder-stage" ref={stageRef}>
+          <div className="tube-cylinder-track">
+            {visibleFragrances.map(({ fragrance, distance }) => {
+              const isActive = fragrance.id === activeFragrance.id
+              const state = getTubeCylinderState(distance, stageHeight, isCylinderSettled, isCompact)
 
-            return (
-              <button
-                key={hasRepeatedVisibleFragrances ? `${fragrance.id}-${distance}` : fragrance.id}
-                type="button"
-                className="tube-cylinder-item"
-                data-active={isActive}
-                aria-pressed={isActive}
-                aria-disabled={!isActive}
-                aria-label={`N ${fragrance.number} ${fragrance.descriptor}`}
-                tabIndex={isActive ? 0 : -1}
-                style={{
-                  zIndex: state.zIndex,
-                  width: 'var(--tube-item-width)',
-                  maxWidth: '100%',
-                  pointerEvents: isActive ? 'auto' : 'none',
-                }}
-                onClick={() => {
-                  if (!isActive) return
-                  onFragranceFocus(fragrance)
-                  const line = getLineById(fragrance.primaryEntryId)
-                  navigate(`/perfumes/${line.slug}/${fragrance.slug}`)
-                }}
-              >
-                <span
-                  className="tube-cylinder-core"
+              return (
+                <button
+                  key={hasRepeatedVisibleFragrances ? `${fragrance.id}-${distance}` : fragrance.id}
+                  type="button"
+                  className="tube-cylinder-item"
+                  data-active={isActive}
+                  aria-pressed={isActive}
+                  aria-disabled={!isActive}
+                  aria-label={`N ${fragrance.number} ${fragrance.descriptor}`}
+                  tabIndex={isActive ? 0 : -1}
                   style={{
-                    transform: `translateY(${state.y}px) translateZ(${state.z}px) rotateX(${state.rotateX}deg) scale(${state.scale})`,
-                    opacity: state.opacity,
-                    filter: `blur(${state.blur}px)`,
+                    zIndex: state.zIndex,
+                    width: 'var(--tube-item-width)',
+                    maxWidth: '100%',
+                    pointerEvents: isActive ? 'auto' : 'none',
+                  }}
+                  onClick={() => {
+                    if (!isActive) return
+                    onFragranceFocus(fragrance)
+                    const line = getLineById(fragrance.primaryEntryId)
+                    navigate(`/perfumes/${line.slug}/${fragrance.slug}`)
                   }}
                 >
-                  <img
-                    className="perfume-tube-image"
-                    src={fragrance.tubeAsset}
-                    alt={`Tubo OMMI ${fragrance.number}`}
-                    loading={isActive ? 'eager' : 'lazy'}
-                    decoding="async"
-                    fetchPriority={isActive ? 'high' : 'auto'}
-                    onError={(event) => {
-                      console.error('No cargo tubo:', fragrance.tubeAsset)
-                      event.currentTarget.style.display = 'none'
-                      event.currentTarget
-                        .closest('.tube-cylinder-item')
-                        ?.classList.add('asset-fallback')
+                  <span
+                    className="tube-cylinder-core"
+                    style={{
+                      transform: `translateY(${state.y}px) translateZ(${state.z}px) rotateX(${state.rotateX}deg) scale(${state.scale})`,
+                      opacity: state.opacity,
+                      filter: `blur(${state.blur}px)`,
                     }}
-                  />
-                </span>
-              </button>
-            )
-          })}
+                  >
+                    <img
+                      className="perfume-tube-image"
+                      src={fragrance.tubeAsset}
+                      alt={`Tubo OMMI ${fragrance.number}`}
+                      loading={isActive ? 'eager' : 'lazy'}
+                      decoding="async"
+                      fetchPriority={isActive ? 'high' : 'auto'}
+                      onError={(event) => {
+                        console.error('No cargo tubo:', fragrance.tubeAsset)
+                        event.currentTarget.style.display = 'none'
+                        event.currentTarget
+                          .closest('.tube-cylinder-item')
+                          ?.classList.add('asset-fallback')
+                      }}
+                    />
+                  </span>
+                </button>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      </section>
 
       <div className="active-tube-description" key={displayedFragrance.id} aria-live="polite">
         <span className="active-tube-number">N&ordm;{displayedFragrance.number}</span>
@@ -393,6 +395,6 @@ export function TubeRack({
         </span>
         <p>{displayedFragrance.notes}</p>
       </div>
-    </section>
+    </>
   )
 }
