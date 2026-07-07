@@ -2420,7 +2420,7 @@ button {
   /* Cilindro más compacto: reduce stageHeight → radiusY menor →
      tubos más juntos (proximidad Gestalt). */
   .tube-cylinder-shell {
-    --tube-item-width: clamp(220px, 30vw, 320px);
+    --tube-item-width: clamp(275px, 37.5vw, 400px);
     --tube-visual-half-width: clamp(110px, 15vw, 160px);
     height: clamp(240px, 38vh, 340px);
     min-height: 0;
@@ -2446,6 +2446,14 @@ button {
     overflow: visible;
     scrollbar-width: none;
     -ms-overflow-style: none;
+  }
+
+  /* Páginas internas de catálogo: 3 cards por fila en rango intermedio */
+  .placeholder-page .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .placeholder-page .catalog-card {
+    grid-column: auto;
   }
 
   /* Sin chips DÍA/NOCHE/... (menos texto) */
