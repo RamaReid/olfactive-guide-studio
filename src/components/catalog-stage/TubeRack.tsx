@@ -14,9 +14,9 @@ const wrapIndex = (index: number, total: number) =>
   ((index % total) + total) % total
 
 const visibleOffsets = [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6]
-const wheelThrottleMs = 260
-const centerSettleDelayMs = 620
-const wheelDeltaThreshold = 4
+const wheelThrottleMs = 120
+const centerSettleDelayMs = 420
+const wheelDeltaThreshold = 2
 
 const lineShowsAllFragrances = (lineId: OmmiLine['id']) =>
   lineId === 'mixto' || lineId === 'discovery'
@@ -216,11 +216,12 @@ export function TubeRack({
       lastWheelTimeRef.current = now
 
       const direction = wheelDelta > 0 ? 1 : -1
+      const steps = Math.max(1, Math.min(3, Math.floor(Math.abs(wheelDelta) / 45)))
       const currentIndex = Math.max(
         0,
         filteredFragrances.findIndex((fragrance) => fragrance.id === activeFragranceKey),
       )
-      const nextIndex = wrapIndex(currentIndex + direction, filteredFragrances.length)
+      const nextIndex = wrapIndex(currentIndex + direction * steps, filteredFragrances.length)
       onFragranceFocus(filteredFragrances[nextIndex])
     }
 
