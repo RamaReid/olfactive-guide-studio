@@ -17,6 +17,7 @@ const visibleOffsets = [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6]
 const wheelThrottleMs = 120
 const centerSettleDelayMs = 420
 const wheelDeltaThreshold = 2
+const touchStepPx = 42
 
 const lineShowsAllFragrances = (lineId: OmmiLine['id']) =>
   lineId === 'mixto' || lineId === 'discovery'
@@ -94,6 +95,10 @@ export function TubeRack({
   const stageRef = useRef<HTMLDivElement>(null)
   const lastWheelTimeRef = useRef(0)
   const hasRenderedActiveRef = useRef(false)
+  const touchStartYRef = useRef<number | null>(null)
+  const touchStartXRef = useRef<number | null>(null)
+  const touchAccumRef = useRef(0)
+  const touchActiveRef = useRef(false)
   const navigate = useNavigate()
   const [stageHeight, setStageHeight] = useState(760)
   const [isCylinderSettled, setIsCylinderSettled] = useState(true)
@@ -227,8 +232,81 @@ export function TubeRack({
 
     stage.addEventListener('wheel', handleWheel, { passive: false })
 
+    const isInsideCenterTouch = (touch: Touch) => {
+      const bounds = stage.getBoundingClientRect()
+      const captureWidth = Math.min(bounds.width * 0.85, 720)
+      const captureHeight = Math.min(bounds.height * 0.85, 760)
+      const centerX = bounds.left + bounds.width / 2
+      const centerY = bounds.top + bounds.height / 2
+      return (
+        Math.abs(touch.clientX - centerX) <= captureWidth / 2 &&
+        Math.abs(touch.clientY - centerY) <= captureHeight / 2
+      )
+    }
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (filteredFragrances.length === 0) return
+      const touch = event.touches[0]
+      if (!touch || !isInsideCenterTouch(touch)) {
+        touchActiveRef.current = false
+        return
+      }
+      touchActiveRef.current = true
+      touchStartYRef.current = touch.clientY
+      touchStartXRef.current = touch.clientX
+      touchAccumRef.current = 0
+    }
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!touchActiveRef.current) return
+      const touch = event.touches[0]
+      if (!touch || touchStartYRef.current === null || touchStartXRef.current === null) return
+
+      const dy = touch.clientY - touchStartYRef.current
+      const dx = touch.clientX - touchStartXRef.current
+      const delta = Math.abs(dy) >= Math.abs(dx) ? dy : dx
+
+      event.preventDefault()
+
+      const advance = touchAccumRef.current - delta
+      const steps = Math.trunc(advance / touchStepPx)
+      if (steps === 0) return
+
+      touchStartYRef.current = touch.clientY
+      touchStartXRef.current = touch.clientX
+      touchAccumRef.current = advance - steps * touchStepPx
+
+      const direction = steps > 0 ? 1 : -1
+      const magnitude = Math.min(3, Math.abs(steps))
+      const currentIndex = Math.max(
+        0,
+        filteredFragrances.findIndex((fragrance) => fragrance.id === activeFragranceKey),
+      )
+      const nextIndex = wrapIndex(
+        currentIndex + direction * magnitude,
+        filteredFragrances.length,
+      )
+      onFragranceFocus(filteredFragrances[nextIndex])
+    }
+
+    const handleTouchEnd = () => {
+      touchActiveRef.current = false
+      touchStartYRef.current = null
+      touchStartXRef.current = null
+      touchAccumRef.current = 0
+    }
+
+    stage.addEventListener('touchstart', handleTouchStart, { passive: true })
+    stage.addEventListener('touchmove', handleTouchMove, { passive: false })
+    stage.addEventListener('touchend', handleTouchEnd)
+    stage.addEventListener('touchcancel', handleTouchEnd)
+
     return () => {
       stage.removeEventListener('wheel', handleWheel)
+      stage.removeEventListener('touchstart', handleTouchStart)
+      stage.removeEventListener('touchmove', handleTouchMove)
+      stage.removeEventListener('touchend', handleTouchEnd)
+      stage.removeEventListener('touchcancel', handleTouchEnd)
     }
   }, [activeFragranceKey, filteredFragrances, onFragranceFocus])
 
