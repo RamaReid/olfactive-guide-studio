@@ -2348,8 +2348,8 @@ button {
     row-gap: 6px;
     padding: 48px 12px 12px;
     overflow: hidden;
-    height: clamp(360px, 56vw, 440px);
-    min-height: clamp(360px, 56vw, 440px);
+    height: min(100svh, 440px);
+    min-height: min(100svh, 360px);
     max-height: 440px;
   }
 
