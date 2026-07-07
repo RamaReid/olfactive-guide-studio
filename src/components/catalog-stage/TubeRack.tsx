@@ -14,9 +14,9 @@ const wrapIndex = (index: number, total: number) =>
   ((index % total) + total) % total
 
 const visibleOffsets = [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6]
-const wheelThrottleMs = 260
-const centerSettleDelayMs = 620
-const wheelDeltaThreshold = 4
+const wheelThrottleMs = 120
+const centerSettleDelayMs = 420
+const wheelDeltaThreshold = 2
 
 const lineShowsAllFragrances = (lineId: OmmiLine['id']) =>
   lineId === 'mixto' || lineId === 'discovery'
