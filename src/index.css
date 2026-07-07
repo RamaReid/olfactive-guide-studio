@@ -2393,12 +2393,13 @@ button {
     transform-origin: center;
   }
 
-  /* Tubos: columna derecha (45%). Vuelve a la lógica desktop:
-     .active-tube-description es absolute dentro de .tube-cylinder-shell. */
+  /* Tubos: columna derecha (45%). La descripción es un hermano del shell
+     dentro del panel; en este rango se posiciona respecto al stage para
+     poder alinearse con el centro de la pantalla. */
   .selector-panel {
     grid-column: 2;
     grid-row: 1;
-    position: relative;
+    position: static;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2452,13 +2453,13 @@ button {
     display: none;
   }
 
-  /* Descripción anclada a la base del cilindro, alineada al borde
-     izquierdo del tubo central: Nº7 y Floral oriental dulce comparten
-     eje vertical con el borde del tubo. */
+  /* Descripción anclada a la base del cilindro y alineada desde el centro
+     de la pantalla hacia la derecha: el borde izquierdo del bloque queda
+     en el 50% del viewport y crece hasta el margen derecho de la pantalla. */
   .catalog-stage .active-tube-description {
     position: absolute;
-    left: 50%;
-    right: auto;
+    left: 50vw;
+    right: clamp(16px, 3vw, 40px);
     bottom: clamp(4px, 1vh, 12px);
     z-index: 260;
     display: flex;
@@ -2467,9 +2468,8 @@ button {
     text-align: left;
     gap: 4px;
     width: auto;
-    max-width: min(80%, 320px);
     margin: 0;
-    padding: 0 0 0 clamp(6px, 1.5vw, 16px);
+    padding: 0;
     pointer-events: none;
   }
 
