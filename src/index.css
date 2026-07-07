@@ -2328,3 +2328,186 @@ button {
     transform: scale(1);
   }
 }
+
+/* =====================================================================
+   Rango intermedio: teléfono landscape + tablet chica.
+   Misma filosofía que mobile (sin chips de categoría, solo cilindros y
+   descripción corta) pero con los dos cilindros lado a lado.
+   No pisa mobile portrait (<=640) ni desktop (>=1024).
+   ===================================================================== */
+@media (min-width: 641px) and (max-width: 1023.98px),
+       (orientation: landscape) and (max-height: 500px) and (max-width: 1023.98px) {
+  /* --- Escenario principal: dos cilindros uno al lado del otro --- */
+  .catalog-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    row-gap: 8px;
+    padding: 64px 16px 16px;
+    overflow: hidden;
+  }
+
+  /* Botellas: columna izquierda, ocupa una sola celda */
+  .category-cylinder {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .category-cylinder,
+  .category-cylinder-shell {
+    perspective: 900px;
+  }
+
+  .category-cylinder-shell {
+    transform: scale(0.72);
+    transform-origin: center;
+  }
+
+  /* Tubos: columna derecha */
+  .perfume-tube-rack,
+  .tube-cylinder-shell {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .tube-cylinder-shell {
+    --tube-item-width: clamp(120px, 24vw, 180px);
+    --tube-visual-half-width: clamp(60px, 12vw, 90px);
+    min-height: clamp(280px, 55vh, 460px);
+    padding-inline: clamp(6px, 2vw, 14px);
+    overflow: visible;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .tube-cylinder-shell::-webkit-scrollbar,
+  .tube-cylinder-stage::-webkit-scrollbar,
+  .tube-cylinder-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tube-cylinder-stage,
+  .tube-cylinder-track {
+    overflow: visible;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  /* Igual que mobile: sin chips DÍA/NOCHE/... */
+  .line-indicator {
+    display: none;
+  }
+
+  /* Descripción corta abajo, cruzando las dos columnas */
+  .active-tube-description,
+  .catalog-stage-product-info {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 0 8px 8px;
+    text-align: center;
+    gap: 4px;
+  }
+
+  .active-tube-description .active-tube-number {
+    display: block;
+    font-size: clamp(18px, 3.2vw, 24px);
+  }
+
+  .active-tube-description strong {
+    font-size: clamp(16px, 2.6vw, 22px);
+  }
+
+  .active-tube-description .active-tube-meta {
+    display: block;
+    font-size: clamp(12px, 1.8vw, 15px);
+    opacity: .85;
+  }
+
+  /* Ocultar el párrafo largo, dejar solo número + familia + meta */
+  .active-tube-description p {
+    display: none;
+  }
+
+  .active-tube-description span:not(.active-tube-number):not(.active-tube-meta) {
+    font-size: clamp(12px, 1.8vw, 14px);
+    opacity: .8;
+  }
+
+  /* --- Grillas de sección: 3 cards por fila --- */
+  .ommi-featured-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .ommi-featured-card {
+    grid-column: auto;
+    padding: 12px;
+    gap: 10px;
+    grid-template-rows: auto 1fr auto;
+    min-height: 0;
+  }
+
+  .ommi-featured-media {
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+  }
+
+  .ommi-explore-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  /* Conjuntos: 3 por fila cuando el ancho lo permite; el combo es full-width */
+  .conjuntos-banner-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .conjuntos-combo-banner {
+    grid-column: 1 / -1;
+  }
+
+  /* --- Chrome: header más compacto y cookie banner discreto --- */
+  .floating-header {
+    padding-block: 8px;
+  }
+
+  .ommi-cookie-bar {
+    left: auto;
+    right: 12px;
+    bottom: 12px;
+    max-width: 360px;
+    padding: 10px 14px;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .ommi-cookie-bar button {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+}
+
+/* Cookie banner también compacto en cualquier viewport muy bajo (safety net) */
+@media (max-height: 520px) {
+  .ommi-cookie-bar {
+    left: auto;
+    right: 12px;
+    bottom: 12px;
+    max-width: 360px;
+    padding: 10px 14px;
+    gap: 8px;
+    font-size: 13px;
+  }
+}
