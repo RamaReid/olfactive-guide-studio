@@ -241,6 +241,9 @@ export function BottleCarousel({
                   className="category-bottle-image"
                   src={line.bottleAsset}
                   alt={`Botella OMMI ${line.name}`}
+                  loading={active ? 'eager' : 'lazy'}
+                  decoding="async"
+                  fetchPriority={active ? 'high' : 'auto'}
                   onError={(event) => {
                     console.error('No cargó botella de categoría:', line.bottleAsset)
                     event.currentTarget.style.display = 'none'

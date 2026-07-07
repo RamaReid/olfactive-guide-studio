@@ -59,6 +59,9 @@ export function ProductPage() {
             <img
               src={fragrance.bottleAsset}
               alt={`Botella OMMI N ${fragrance.number} ${fragrance.referenceName}`}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
             />
             <figcaption>Botella N&ordm; {fragrance.number}</figcaption>
           </figure>
@@ -68,6 +71,8 @@ export function ProductPage() {
               <img
                 src={setAsset}
                 alt={`Discovery Set OMMI ${presentationLine.name}`}
+                loading="lazy"
+                decoding="async"
               />
               <figcaption>Discovery Set {presentationLine.name}</figcaption>
             </figure>
@@ -77,6 +82,8 @@ export function ProductPage() {
             <img
               src={presentationLine.assets.boxHint}
               alt={`Caja OMMI ${presentationLine.name}`}
+              loading="lazy"
+              decoding="async"
             />
             <figcaption>Presentacion {presentationLine.name}</figcaption>
           </figure>
