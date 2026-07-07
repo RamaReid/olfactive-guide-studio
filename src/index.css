@@ -2159,13 +2159,12 @@ button {
     padding: 10px;
     gap: 8px;
     grid-template-rows: auto 1fr auto;
-    aspect-ratio: 3 / 5;
     overflow: hidden;
   }
 
   .ommi-featured-media {
     min-height: 0;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 5;
   }
 
   .ommi-featured-media img {
