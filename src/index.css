@@ -2428,13 +2428,14 @@ button {
     display: none;
   }
 
-  /* Descripción corta abajo, cruzando las dos columnas */
+  /* Descripción corta: columna izquierda para no chocar con el cookie
+     banner que vive abajo a la derecha */
   .catalog-stage .active-tube-description {
-    grid-column: 1 / -1;
+    grid-column: 1;
     grid-row: 3;
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 0 8px 8px;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 12px 8px;
     text-align: center;
     gap: 4px;
   }
