@@ -13,8 +13,8 @@ const conjuntosBanners = [
 
 const comboBanner = {
   href: '/conjuntos/100ml-3-decants',
-  bottleSrc: '/ommi_other/OMMI Dia.png',
-  discoverySrc: '/ommi_other/OMMI Discobery Set dia.png',
+  bottleSrc: '/ommi_other/OMMI Dia.webp',
+  discoverySrc: '/ommi_other/OMMI Discobery Set dia.webp',
 }
 
 export function ConjuntosOmmiSection() {

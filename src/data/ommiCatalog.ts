@@ -78,28 +78,28 @@ export type OmmiFragrance = {
 }
 
 const categoryAssetPath = (entryId: OmmiEntryId) =>
-  `/ommi_bottle_carrusel/ommi_bottle_${entryId}.png`
+  `/ommi_bottle_carrusel/ommi_bottle_${entryId}.webp`
 
-const tubeAssetPath = (number: string) => `/ommi_tubes_number/t_N${number}.png`
+const tubeAssetPath = (number: string) => `/ommi_tubes_number/t_N${number}.webp`
 
-const bottleAssetPath = (number: string) => `/ommi_bottle_number/b_N${number}.png`
+const bottleAssetPath = (number: string) => `/ommi_bottle_number/b_N${number}.webp`
 
 const lineBoxAssetPath = (entryId: OmmiEntryId) => {
   switch (entryId) {
     case 'dia':
-      return '/ommi_other/OMMI Dia.png'
+      return '/ommi_other/OMMI Dia.webp'
     case 'noche':
-      return '/ommi_other/OMMI Noche.png'
+      return '/ommi_other/OMMI Noche.webp'
     case 'piel':
-      return '/ommi_other/OMMi Piel.png'
+      return '/ommi_other/OMMi Piel.webp'
     case 'firma':
-      return '/ommi_other/OMMI Firma.png'
+      return '/ommi_other/OMMI Firma.webp'
     case 'regalo':
-      return '/ommi_other/OMMI Regalo.png'
+      return '/ommi_other/OMMI Regalo.webp'
     case 'mixto':
-      return '/ommi_other/OMMI Firma.png'
+      return '/ommi_other/OMMI Firma.webp'
     case 'discovery':
-      return '/ommi_other/OMMI Discobery Set dia.png'
+      return '/ommi_other/OMMI Discobery Set dia.webp'
     default:
       return categoryAssetPath(entryId)
   }
@@ -108,15 +108,15 @@ const lineBoxAssetPath = (entryId: OmmiEntryId) => {
 export const discoverySetAssetPath = (entryId: OmmiEntryId) => {
   switch (entryId) {
     case 'dia':
-      return '/ommi_other/OMMI Discobery Set dia.png'
+      return '/ommi_other/OMMI Discobery Set dia.webp'
     case 'noche':
-      return '/ommi_other/OMMI Discobery Set Noche .png'
+      return '/ommi_other/OMMI Discobery Set Noche .webp'
     case 'piel':
-      return '/ommi_other/OMMI Discobery Set piel.png'
+      return '/ommi_other/OMMI Discobery Set piel.webp'
     case 'firma':
-      return '/ommi_other/OMMI Discobery Set Firma (2).png'
+      return '/ommi_other/OMMI Discobery Set Firma (2).webp'
     case 'regalo':
-      return '/ommi_other/OMMI Discobery Set Regalo.png'
+      return '/ommi_other/OMMI Discobery Set Regalo.webp'
     default:
       return undefined
   }

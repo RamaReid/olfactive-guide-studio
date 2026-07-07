@@ -114,7 +114,7 @@ export function ExpandedOmmiSections() {
             </a>
           </div>
           <div className="ommi-social-product">
-            <img src="/ommi_other/OMMI%20Firma.png" alt="OMMI Firma" />
+            <img src="/ommi_other/OMMI%20Firma.webp" alt="OMMI Firma" />
           </div>
         </div>
         <div className="ommi-social-media">
