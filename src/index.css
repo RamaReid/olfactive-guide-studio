@@ -2372,7 +2372,7 @@ button {
   }
 
   .category-cylinder-shell {
-    transform: scale(clamp(0.34, 0.5vw + 0.28, 0.5));
+    transform: scale(clamp(0.3, 0.06vh + 0.28, 0.42));
     transform-origin: center;
   }
 
