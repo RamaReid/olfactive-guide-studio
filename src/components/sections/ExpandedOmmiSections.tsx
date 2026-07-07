@@ -121,7 +121,7 @@ export function ExpandedOmmiSections() {
         </div>
         <div className="ommi-social-media">
           <video
-            src={ommiVideo.url}
+            src="/__l5e/assets-v1/7421dd34-a3f0-41fb-9d13-2a7e17791041/OMMI.mp4"
             autoPlay
             muted
             loop
