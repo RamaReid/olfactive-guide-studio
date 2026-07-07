@@ -169,6 +169,9 @@ export function BottleAvatar({
               className="bottle-image"
               src={frontImageSrc}
               alt=""
+              loading={isActive ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchPriority={isActive ? 'high' : 'auto'}
               onError={() => setFrontImageFailed(true)}
             />
           ) : (
@@ -188,6 +191,8 @@ export function BottleAvatar({
               className="bottle-image"
               src={backImageSrc}
               alt=""
+              loading="lazy"
+              decoding="async"
               onError={() => setBackImageFailed(true)}
             />
           ) : (
