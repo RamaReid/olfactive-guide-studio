@@ -281,7 +281,8 @@ export function TubeRack({
       <div className="active-tube-description" key={displayedFragrance.id} aria-live="polite">
         <span className="active-tube-number">N&ordm;{displayedFragrance.number}</span>
         <strong>{displayedFragrance.descriptor}</strong>
-        <span>
+        <span className="active-tube-meta">
+          N&ordm;{displayedFragrance.number} &middot;{' '}
           {categoryLabelById[displayedFragrance.primaryEntryId]} -{' '}
           {audienceLabelById[displayedFragrance.audience]}
         </span>

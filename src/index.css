@@ -2081,9 +2081,11 @@ button {
 
   /* Cilindro de tubos más chico, sin scrollbar visible */
   .tube-cylinder-shell {
-    --tube-item-width: 68vw;
-    --tube-visual-half-width: 34vw;
-    min-height: clamp(200px, 52vw, 280px);
+    --tube-item-width: clamp(150px, 48vw, 220px);
+    --tube-visual-half-width: clamp(75px, 24vw, 110px);
+    min-height: clamp(360px, 92vw, 460px);
+    padding-inline: clamp(8px, 3vw, 16px);
+    overflow: visible;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -2094,6 +2096,7 @@ button {
 
   .tube-cylinder-stage,
   .tube-cylinder-track {
+    overflow: visible;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -2119,6 +2122,16 @@ button {
   .active-tube-description span,
   .active-tube-description p {
     display: none;
+  }
+
+  .active-tube-description .active-tube-number {
+    display: none;
+  }
+
+  .active-tube-description .active-tube-meta {
+    display: block;
+    font-size: clamp(13px, 3.6vw, 16px);
+    opacity: .85;
   }
 
   /* Destacados: 2 cards por fila */
