@@ -216,11 +216,12 @@ export function TubeRack({
       lastWheelTimeRef.current = now
 
       const direction = wheelDelta > 0 ? 1 : -1
+      const steps = Math.max(1, Math.min(3, Math.floor(Math.abs(wheelDelta) / 45)))
       const currentIndex = Math.max(
         0,
         filteredFragrances.findIndex((fragrance) => fragrance.id === activeFragranceKey),
       )
-      const nextIndex = wrapIndex(currentIndex + direction, filteredFragrances.length)
+      const nextIndex = wrapIndex(currentIndex + direction * steps, filteredFragrances.length)
       onFragranceFocus(filteredFragrances[nextIndex])
     }
 
