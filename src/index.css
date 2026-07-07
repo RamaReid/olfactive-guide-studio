@@ -2300,3 +2300,31 @@ button {
     justify-self: start;
   }
 }
+
+/* Mobile <=640: catalogo / discovery / audiencia = 2 cards por fila, misma proporcion que Destacados */
+@media (max-width: 640px) {
+  .catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .catalog-card {
+    grid-column: auto;
+    padding: 10px;
+    gap: 8px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .catalog-card .ommi-featured-media {
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+  }
+
+  .catalog-card .ommi-featured-media img {
+    width: 100%;
+    max-height: 100%;
+    transform: scale(1);
+  }
+}
