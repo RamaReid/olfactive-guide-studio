@@ -2348,9 +2348,10 @@ button {
     row-gap: 0;
     padding: 0;
     overflow: hidden;
-    height: min(100svh, 520px);
-    min-height: min(100svh, 380px);
-    max-height: 520px;
+    aspect-ratio: 21 / 9;
+    height: auto;
+    min-height: 0;
+    max-height: min(100svh, 520px);
   }
 
   /* Botellas: columna izquierda (55%) */
@@ -2372,7 +2373,7 @@ button {
   }
 
   .category-cylinder-shell {
-    transform: scale(0.3);
+    transform: scale(0.375);
     transform-origin: center;
   }
 
@@ -2440,8 +2441,9 @@ button {
      eje vertical con el borde del tubo. */
   .catalog-stage .active-tube-description {
     position: absolute;
-    left: calc(50% - var(--tube-visual-half-width));
-    bottom: clamp(10px, 2vh, 20px);
+    left: 0;
+    right: auto;
+    bottom: clamp(4px, 1vh, 12px);
     z-index: 260;
     display: flex;
     flex-direction: column;
@@ -2451,7 +2453,7 @@ button {
     width: auto;
     max-width: min(80%, 320px);
     margin: 0;
-    padding: 0;
+    padding: 0 0 0 clamp(6px, 1.5vw, 16px);
     pointer-events: none;
   }
 
