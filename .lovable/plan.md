@@ -1,36 +1,59 @@
-## Diagnóstico
+## Objetivo
 
-No es solo renderizado. Cuando el cilindro rota, los tubos periféricos viajan verticalmente hasta ~`stageHeight * 0.44` px desde el centro (fórmula en `getTubeCylinderState` de `TubeRack.tsx`). En mobile el shell mide ~360-460px de alto, así que los tubos en tránsito recorren ±200px y se salen del área visible del cilindro (y del row del grid `.catalog-stage: minmax(0, 55svh)`), aunque en reposo el central se ve completo.
-
-Además, en tránsito el tubo central baja de `scale 1.1` a `baseScale`, lo que refuerza la sensación de "no está completo".
+1. Ocultar la barra de scroll vertical de la derecha (sin desactivar el scroll).
+2. En "Destacados" (mobile), mostrar 2 cards paralelas de igual altura y ancho, respetando la proporción interna del desktop (badges → media grande centrada → copy).
 
 ## Cambios
 
-### 1. `src/components/catalog-stage/TubeRack.tsx` — radio responsivo
+### 1. `src/index.css` — ocultar scrollbar vertical global
 
-En `getTubeCylinderState`, aceptar un segundo parámetro `isCompactViewport: boolean` (o leer `window.innerWidth`) y reducir el radio vertical y la rotación en mobile:
+Agregar al bloque base (fuera de media queries), aplicable a todos los viewports:
 
-- `radiusY` compact: `Math.min(Math.max(120, stageHeight * 0.28), stageHeight * 0.32)` (antes 0.44-0.46).
-- `radiusZ` compact: `Math.max(110, stageHeight * 0.14)`.
-- `rotateX` compact: `-angleDeg * 0.35` (antes 0.55) para que los tubos periféricos no se inclinen tanto y no crezcan hacia afuera.
-- Mantener `scale` central `1.1` en reposo; en tránsito subir el `baseScale` mínimo del centro a `0.9` para que nunca se vea "cortado" mientras rota.
+```css
+html, body {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* Edge legacy */
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;                /* Chromium / Safari */
+}
+```
 
-Detectar viewport con un pequeño `useEffect` + `matchMedia('(max-width: 640px)')` guardado en state (`isCompact`), y pasarlo a `getTubeCylinderState`.
+El scroll sigue funcionando con rueda, gesto y teclado; sólo desaparece la barra visible.
 
-### 2. `src/index.css` — asegurar que no clipea ningún ancestro en mobile
+### 2. `src/index.css` — Destacados en 2 columnas paralelas dentro de `@media (max-width: 640px)`
 
-Dentro de `@media (max-width: 640px)`:
-- `.catalog-stage { overflow: visible; }` para que el row del grid no recorte el cilindro cuando los tubos viajan.
-- `.tube-cylinder-shell` sube `min-height` a `clamp(400px, 100vw, 520px)` para dar aire vertical al recorrido reducido.
-- Confirmar `overflow: visible` en `.tube-cylinder-stage` y `.tube-cylinder-track` (ya está).
+- `.ommi-featured-grid`
+  - `grid-template-columns: repeat(2, minmax(0, 1fr));` (ya está)
+  - `gap: 10px;`
+  - `align-items: stretch;` para igualar alturas.
+- `.ommi-featured-card`
+  - `min-height: 0;` (quitar los 470px heredados que rompen la proporción en mobile).
+  - `padding: 10px;`
+  - `gap: 8px;`
+  - `grid-template-rows: auto 1fr auto;` (misma estructura que desktop).
+  - `aspect-ratio: 3 / 5;` para mantener la proporción vertical del desktop.
+  - `overflow: hidden;` explícito para que la imagen no desborde.
+- `.ommi-featured-media`
+  - `min-height: 0;`
+  - `aspect-ratio: 1 / 1;` (media cuadrada centrada).
+- `.ommi-featured-media img`
+  - `width: 100%;`
+  - `max-height: 100%;`
+  - `transform: scale(1);` (quitar `scale(1.12)` que desbordaba la card).
 
 ### 3. Sin cambios en desktop
 
-Los ajustes de radio/rotación/scale sólo se aplican cuando `isCompact` es `true`. Desktop conserva la fórmula original.
+Los ajustes de Destacados viven íntegramente dentro de `@media (max-width: 640px)`. La ocultación de scrollbar aplica también en desktop, según el pedido explícito.
 
 ## Verificación
 
 Playwright 390×844:
-- Screenshot inicial del cilindro en reposo (central completo).
-- Simular scroll/rueda sobre el cilindro para forzar rotación y capturar mid-transition → confirmar que el tubo central sigue completo y los vecinos no se cortan arriba/abajo.
-- Screenshot 1440×900 → confirmar desktop sin cambios.
+- Screenshot inicial → confirmar ausencia de scrollbar vertical a la derecha.
+- Scroll hasta Destacados → confirmar 2 cards paralelas de igual altura, con la misma jerarquía visual que desktop (badges arriba, imagen centrada sin recorte, copy debajo) y sin scroll horizontal.
+
+Playwright 1440×900:
+- Screenshot home + Destacados → confirmar que desktop mantiene grid de 4 cards con `scale(1.12)` y que la barra vertical tampoco se muestra.

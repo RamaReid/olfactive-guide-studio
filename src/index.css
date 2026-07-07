@@ -24,6 +24,8 @@
 html {
   overflow-x: hidden;
   background: #0b0c0c;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 body {
@@ -31,6 +33,15 @@ body {
   min-width: 320px;
   min-height: 100svh;
   margin: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 button,
@@ -2138,11 +2149,28 @@ button {
   /* Destacados: 2 cards por fila */
   .ommi-featured-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(12px, 3vw, 18px);
+    gap: 10px;
+    align-items: stretch;
   }
 
   .ommi-featured-card {
     grid-column: auto;
+    min-height: 0;
+    padding: 10px;
+    gap: 8px;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+  }
+
+  .ommi-featured-media {
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+  }
+
+  .ommi-featured-media img {
+    width: 100%;
+    max-height: 100%;
+    transform: scale(1);
   }
 
   .ommi-featured-badges {
@@ -2228,7 +2256,7 @@ button {
   }
 
   .ommi-featured-card {
-    grid-column: 1 / -1;
+    grid-column: auto;
   }
 
   .catalog-card {
