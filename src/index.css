@@ -2031,23 +2031,134 @@ button {
     grid-template-rows: minmax(0, 55svh) auto;
   }
 
-  .category-bottle {
-    width: clamp(140px, 44vw, 200px);
-    height: clamp(260px, 78vw, 380px);
+  /* Carrusel de botellas plano: central + 2 asomando, loop infinito */
+  .category-cylinder,
+  .category-cylinder-shell {
+    perspective: none;
   }
 
+  .category-cylinder-track {
+    transform-style: flat;
+  }
+
+  .category-bottle {
+    filter: none !important;
+    transition:
+      transform 520ms cubic-bezier(.2, .8, .2, 1),
+      opacity 380ms ease;
+  }
+
+  .category-bottle[data-distance="0"] {
+    width: clamp(180px, 58vw, 260px);
+    height: clamp(320px, 100vw, 440px);
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    opacity: 1 !important;
+    z-index: 30 !important;
+  }
+
+  .category-bottle[data-distance="1"] {
+    transform: translate3d(42%, 0, 0) scale(.62) !important;
+    opacity: .45 !important;
+    z-index: 10 !important;
+    filter: blur(1.4px) !important;
+  }
+
+  .category-bottle[data-distance="-1"] {
+    transform: translate3d(-42%, 0, 0) scale(.62) !important;
+    opacity: .45 !important;
+    z-index: 10 !important;
+    filter: blur(1.4px) !important;
+  }
+
+  .category-bottle:not([data-distance="0"]):not([data-distance="1"]):not([data-distance="-1"]) {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .line-indicator {
+    display: none;
+  }
+
+  /* Cilindro de tubos más chico, sin scrollbar visible */
   .tube-cylinder-shell {
-    --tube-item-width: 84vw;
-    --tube-visual-half-width: 42vw;
-    min-height: clamp(260px, 70vw, 360px);
+    --tube-item-width: 68vw;
+    --tube-visual-half-width: 34vw;
+    min-height: clamp(200px, 52vw, 280px);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .tube-cylinder-shell::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tube-cylinder-stage,
+  .tube-cylinder-track {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .tube-cylinder-stage::-webkit-scrollbar,
+  .tube-cylinder-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .active-tube-description {
+    gap: 4px;
+    margin-top: clamp(8px, 2vw, 14px);
+  }
+
+  .active-tube-description .active-tube-number {
+    font-size: clamp(20px, 6vw, 26px);
   }
 
   .active-tube-description strong {
-    font-size: clamp(20px, 5vw, 26px);
+    font-size: clamp(18px, 5vw, 24px);
   }
 
+  .active-tube-description span,
+  .active-tube-description p {
+    display: none;
+  }
+
+  /* Destacados: 2 cards por fila */
   .ommi-featured-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(12px, 3vw, 18px);
+  }
+
+  .ommi-featured-card {
+    grid-column: auto;
+  }
+
+  .ommi-featured-badges {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .ommi-featured-badges span {
+    padding: 4px 6px;
+    font-size: 9px;
+  }
+
+  .ommi-featured-copy {
+    gap: 4px;
+  }
+
+  .ommi-featured-number {
+    font-size: clamp(14px, 3.5vw, 18px);
+  }
+
+  .ommi-featured-copy strong {
+    font-size: clamp(13px, 3.2vw, 16px);
+  }
+
+  .ommi-featured-copy small {
+    font-size: clamp(10px, 2.6vw, 12px);
+  }
+
+  .ommi-featured-price {
+    font-size: clamp(14px, 3.5vw, 18px);
   }
 
   .ommi-explore-grid {
