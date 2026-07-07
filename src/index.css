@@ -2412,7 +2412,7 @@ button {
     --tube-item-width: clamp(100px, 20vw, 160px);
     --tube-visual-half-width: clamp(50px, 10vw, 80px);
     min-height: 0;
-    height: 100%;
+    height: auto;
     padding-inline: clamp(6px, 2vw, 14px);
     overflow: visible;
     scrollbar-width: none;
