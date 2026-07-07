@@ -2416,6 +2416,13 @@ button {
     display: none;
   }
 
+  /* Reducir el gradiente/blur ::after para que no tape los tubos
+     cuando el shell es más compacto. */
+  .tube-cylinder-shell::after {
+    height: clamp(60px, 12vh, 110px);
+    backdrop-filter: none;
+  }
+
   .tube-cylinder-stage,
   .tube-cylinder-track {
     overflow: visible;
