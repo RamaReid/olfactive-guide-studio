@@ -2389,7 +2389,7 @@ button {
   }
 
   .category-cylinder-shell {
-    transform: scale(0.375);
+    transform: scale(0.469);
     transform-origin: center;
   }
 
@@ -2420,7 +2420,7 @@ button {
   /* Cilindro más compacto: reduce stageHeight → radiusY menor →
      tubos más juntos (proximidad Gestalt). */
   .tube-cylinder-shell {
-    --tube-item-width: clamp(275px, 37.5vw, 400px);
+    --tube-item-width: clamp(220px, 30vw, 320px);
     --tube-visual-half-width: clamp(110px, 15vw, 160px);
     height: clamp(240px, 38vh, 340px);
     min-height: 0;

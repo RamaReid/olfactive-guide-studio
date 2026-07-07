@@ -1,58 +1,52 @@
 ## Problema
 
-En el rango intermedio (viewport ≈768px como el actual 768×674), las páginas internas de catálogo de línea (`/perfumes/firma`, `/perfumes/regalo`, etc.) están renderizando **todas las cards en una sola fila**, apretadas y cortadas. Deben mostrar **3 cards por fila**.
+En el rango intermedio la "botella" del home no cambió de tamaño. El cambio anterior tocó `--tube-item-width`, que controla los **tubos** de la columna derecha (`TubeRack`), no la **botella** de la columna izquierda (`BottleCarousel` → `.category-cylinder-shell`).
 
 ## Causa
 
-`.catalog-card` tiene `grid-column: span 3` sobre un grid de 12 columnas, pero en el rango intermedio no hay override, así que el grid queda con 12 columnas de ~55px cada una y las cards se comprimen hasta caber todas en una fila.
-
-## Solución (solo `src/index.css`)
-
-### 1. Cards a 3 columnas en rango intermedio (solo páginas internas)
-
-Dentro del bloque `@media (min-width: 641px) and (max-width: 1120px), ...` añadir:
+La botella del cilindro está escalada por:
 
 ```css
-.placeholder-page .catalog-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-.placeholder-page .catalog-card {
-  grid-column: auto;
+/* src/index.css línea 2391-2394, dentro del media intermedio */
+.category-cylinder-shell {
+  transform: scale(0.375);
+  transform-origin: center;
 }
 ```
 
-Se usa `grid-template-columns: repeat(3, …)` (más robusto que solo cambiar el span) y se acota con `.placeholder-page` — wrapper que envuelve todas las páginas internas y no existe en el home — para no afectar el destacado del home.
+Ese `scale(0.375)` es lo que define su tamaño visible. `--tube-item-width` no la afecta.
+
+## Solución (solo `src/index.css`, solo media intermedio)
+
+1. Escalar la botella ×1.25:
 
 ```text
-Antes (intermedio, /perfumes/firma)     Después
-[c c c c c c c c c c c c] 12/fila       [ c ][ c ][ c ]  3/fila
-                                        [ c ][ c ][ c ]
-                                        [ c ][ c ][ c ]
-                                        [ c ][ c ][ c ]
+Antes:   transform: scale(0.375);
+Después: transform: scale(0.469);   /* 0.375 × 1.25 */
 ```
 
-### 2. Botella del cilindro ×1.25 (solo home, solo rango intermedio)
-
-En el mismo media-query, para el home:
+2. Revertir el cambio previo de `--tube-item-width` a su valor original para dejar los tubos como estaban:
 
 ```text
-Antes:   --tube-item-width: clamp(220px, 30vw, 320px);
-Después: --tube-item-width: clamp(275px, 37.5vw, 400px);
+Antes (actual): --tube-item-width: clamp(275px, 37.5vw, 400px);
+Después:        --tube-item-width: clamp(220px, 30vw, 320px);
 ```
+
+Los tubos vuelven a su tamaño original; solo crece la botella del cilindro.
 
 ## Fuera de alcance
 
 - No se toca desktop, mobile portrait ni tablet estándar.
-- No se toca el home (cards del destacado sin cambios).
+- No se toca la grid de cards (3 columnas en internas ya aplicada, se mantiene).
 - No se toca ningún componente TSX.
 
 ## Verificación
 
 Playwright a 768×674:
-- `/perfumes/firma`, `/perfumes/regalo`, `/perfumes`, `/audiencia/:id`, `/discovery`: 3 cards por fila, misma proporción y alineación.
-- Home: botella claramente más grande; cards del destacado y resto del layout intactos.
+- Home: la botella del cilindro se ve claramente más grande (≈+25%). Tubos de la derecha sin cambios respecto al estado original.
+- Internas (`/perfumes/firma`, etc.): sin regresión, 3 cards por fila intactas.
 
-Y en 1440×900 + 390×844: sin cambios.
+A 1440×900 y 390×844: sin cambios.
 
 ## Archivos
 
