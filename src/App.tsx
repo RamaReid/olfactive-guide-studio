@@ -36,7 +36,7 @@ function App() {
             title="Elegir por uso, piel y carÃ¡cter"
             body="Esta ruta queda preparada para explicar cÃ³mo cruzar ocasiÃ³n, familia olfativa, intensidad y audiencia antes de elegir."
             artwork={{
-              src: '/ommi_other/OMMI Dia.png',
+              src: '/ommi_other/OMMI Dia.webp',
               alt: 'Caja OMMI DÃ­a',
             }}
           />
@@ -50,7 +50,7 @@ function App() {
             title="Evidencia visible"
             body="Esta secciÃ³n queda reservada para trazabilidad, conservaciÃ³n, concentraciÃ³n, lotes y criterios de calidad."
             artwork={{
-              src: '/ommi_other/OMMI Firma.png',
+              src: '/ommi_other/OMMI Firma.webp',
               alt: 'Caja OMMI Firma',
             }}
           />
@@ -64,7 +64,7 @@ function App() {
             title="Sistema olfativo OMMI"
             body="OMMI se organiza como una arquitectura de elecciÃ³n, no como una lista plana de referencias."
             artwork={{
-              src: '/ommi_other/OMMI Firma.png',
+              src: '/ommi_other/OMMI Firma.webp',
               alt: 'Caja OMMI Firma',
             }}
           />
@@ -78,7 +78,7 @@ function App() {
             title="Comprar en OMMI"
             body="Accesos a como comprar, preguntas frecuentes, devoluciones, contacto y seguimiento de tu compra."
             artwork={{
-              src: '/ommi_other/OMMI Discobery Set dia.png',
+              src: '/ommi_other/OMMI Discobery Set dia.webp',
               alt: 'Discovery Set OMMI DÃ­a',
             }}
           />
@@ -92,7 +92,7 @@ function App() {
             title="Como comprar"
             body="Ruta preparada para explicar el proceso de compra, envio y medios de pago."
             artwork={{
-              src: '/ommi_other/OMMI Discobery Set Regalo.png',
+              src: '/ommi_other/OMMI Discobery Set Regalo.webp',
               alt: 'Discovery Set OMMI Regalo',
             }}
           />
@@ -106,7 +106,7 @@ function App() {
             title="Preguntas frecuentes"
             body="Ruta preparada para resolver dudas habituales antes y despues de comprar."
             artwork={{
-              src: '/ommi_other/OMMI Discobery Set Noche .png',
+              src: '/ommi_other/OMMI Discobery Set Noche .webp',
               alt: 'Discovery Set OMMI Noche',
             }}
           />
@@ -120,7 +120,7 @@ function App() {
             title="Politica de devolucion y reembolso"
             body="Ruta preparada para condiciones de cambios, devoluciones y reembolsos."
             artwork={{
-              src: '/ommi_other/OMMI Discobery Set piel.png',
+              src: '/ommi_other/OMMI Discobery Set piel.webp',
               alt: 'Discovery Set OMMI Piel',
             }}
           />
@@ -134,7 +134,7 @@ function App() {
             title="Aviso legal"
             body="Los productos mencionados son una guia y no deben confundirse con marcas de disenador o marcas de nicho."
             artwork={{
-              src: '/ommi_other/OMMI Regalo.png',
+              src: '/ommi_other/OMMI Regalo.webp',
               alt: 'Caja OMMI Regalo',
             }}
           />
@@ -148,7 +148,7 @@ function App() {
             title="Politica de privacidad"
             body="Ruta preparada para la politica de privacidad de OMMI."
             artwork={{
-              src: '/ommi_other/OMMI Firma.png',
+              src: '/ommi_other/OMMI Firma.webp',
               alt: 'Caja OMMI Firma',
             }}
           />
@@ -162,7 +162,7 @@ function App() {
             title="Terminos y condiciones de uso"
             body="Ruta preparada para los terminos y condiciones de uso."
             artwork={{
-              src: '/ommi_other/OMMI Firma.png',
+              src: '/ommi_other/OMMI Firma.webp',
               alt: 'Caja OMMI Firma',
             }}
           />
@@ -176,7 +176,7 @@ function App() {
             title="Carrito de compras"
             body="El carrito de compras esta vacio."
             artwork={{
-              src: '/ommi_other/OMMI Firma.png',
+              src: '/ommi_other/OMMI Firma.webp',
               alt: 'Caja OMMI Firma',
             }}
           />
@@ -190,7 +190,7 @@ function App() {
             title="Contactanos"
             body="WhatsApp 541126036564. Telefono: +5491126036564. Palermo, CABA."
             artwork={{
-              src: '/ommi_other/OMMI Regalo.png',
+              src: '/ommi_other/OMMI Regalo.webp',
               alt: 'Caja OMMI Regalo',
             }}
           />
@@ -204,7 +204,7 @@ function App() {
             title="Boton de arrepentimiento"
             body="Ruta preparada para iniciar una solicitud de arrepentimiento de compra."
             artwork={{
-              src: '/ommi_other/OMMI Discobery Set Regalo.png',
+              src: '/ommi_other/OMMI Discobery Set Regalo.webp',
               alt: 'Discovery Set OMMI Regalo',
             }}
           />
@@ -218,7 +218,7 @@ function App() {
             title="Pack 10 Decants a eleccion"
             body="Pack promocional de 10 decants a eleccion."
             artwork={{
-              src: '/ommi_other/OMMI Discobery Set dia.png',
+              src: '/ommi_other/OMMI Discobery Set dia.webp',
               alt: 'Discovery Set OMMI DÃ­a',
             }}
           />
@@ -232,7 +232,7 @@ function App() {
             title="2 OMMI a eleccion de 100 ml"
             body="Promocion especial de dos fragancias OMMI de 100 ml."
             artwork={{
-              src: '/ommi_other/OMMI Discobery Set Firma (2).png',
+              src: '/ommi_other/OMMI Discobery Set Firma (2).webp',
               alt: 'Discovery Set OMMI Firma',
             }}
           />
@@ -246,7 +246,7 @@ function App() {
             title="OMMI 100 ml + 3 Decants a eleccion"
             body="Una fragancia OMMI de 100 ml y tres decants para descubrir."
             artwork={{
-              src: '/ommi_other/OMMI Discobery Set dia.png',
+              src: '/ommi_other/OMMI Discobery Set dia.webp',
               alt: 'Discovery Set OMMI DÃ­a',
             }}
           />

@@ -32,7 +32,7 @@ export function CatalogShowcaseCard({
         <span>Envio gratis</span>
       </span>
       <span className="ommi-featured-media catalog-card-media">
-        <img src={imageSrc} alt={imageAlt} />
+        <img src={imageSrc} alt={imageAlt} loading="lazy" decoding="async" />
       </span>
       <span className="ommi-featured-copy">
         {number ? <span className="ommi-featured-number">N°&nbsp;{number}</span> : null}

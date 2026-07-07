@@ -13,8 +13,8 @@ const conjuntosBanners = [
 
 const comboBanner = {
   href: '/conjuntos/100ml-3-decants',
-  bottleSrc: '/ommi_other/OMMI Dia.png',
-  discoverySrc: '/ommi_other/OMMI Discobery Set dia.png',
+  bottleSrc: '/ommi_other/OMMI Dia.webp',
+  discoverySrc: '/ommi_other/OMMI Discobery Set dia.webp',
 }
 
 export function ConjuntosOmmiSection() {
@@ -37,6 +37,8 @@ export function ConjuntosOmmiSection() {
                 className="conjuntos-banner-image"
                 src={banner.src}
                 alt={banner.alt}
+                loading="lazy"
+                decoding="async"
               />
             </a>
           ))}
@@ -55,6 +57,8 @@ export function ConjuntosOmmiSection() {
                   className="conjuntos-combo-image"
                   src={comboBanner.bottleSrc}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                 />
               </span>
               <span className="conjuntos-combo-image-frame">
@@ -62,6 +66,8 @@ export function ConjuntosOmmiSection() {
                   className="conjuntos-combo-image"
                   src={comboBanner.discoverySrc}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                 />
               </span>
             </span>

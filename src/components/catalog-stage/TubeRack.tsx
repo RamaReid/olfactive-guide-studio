@@ -282,6 +282,8 @@ export function TubeRack({
                     className="perfume-tube-image"
                     src={fragrance.tubeAsset}
                     alt={`Tubo OMMI ${fragrance.number}`}
+                    loading="lazy"
+                    decoding="async"
                     onError={(event) => {
                       console.error('No cargo tubo:', fragrance.tubeAsset)
                       event.currentTarget.style.display = 'none'
