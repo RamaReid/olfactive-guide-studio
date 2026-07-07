@@ -1,97 +1,137 @@
-## Objetivo
+## Análisis (lenguaje proyectual + Gestalt)
 
-En el rango intermedio (teléfono landscape + tablet portrait + tablet landscape, 641–1120px) el `CatalogStage` se comporta como si fuera un móvil apaisado: mismo alto de contenedor, mismos cilindros a esa escala, y descripción corta (solo Nº y descriptor) debajo del cilindro derecho. El resto de la página fluye normalmente debajo.
+**Diagnóstico de la captura actual:**
 
-## Cambios (solo `src/index.css`, aditivos)
+1. **Proximidad rota** — los tubos están separados verticalmente porque `stageHeight` del `.tube-cylinder-shell` crece hasta ocupar toda la columna (~324px). El componente calcula la separación entre tubos como `radiusY = stageHeight * 0.44` (ver `TubeRack.tsx`, `getTubeCylinderState`). Cuanto más alto el shell, más lejos quedan los tubos entre sí → se pierde la lectura de "grupo/cilindro" y aparecen como piezas sueltas.
 
-### 1. Contenedor con altura tipo móvil apaisado
+2. **Alineación quebrada** — la descripción vive centrada debajo del cilindro (`text-align: center`, en flujo). Rompe el eje vertical del contenido: no hay una línea invisible que unifique la "N" de Nº7 con la "L" de Floral y con el borde izquierdo del tubo visible. Falta el principio de **alineación común**.
 
-Dentro del media intermedio, forzar:
+3. **Continuidad interrumpida** — texto y cilindro están separados por padding vertical. En el diseño desktop la descripción está anclada a la **base** del cilindro (bottom-inside), no debajo. Compartir la línea base los convierte en una sola unidad visual (Gestalt: figura única, no dos figuras apiladas).
+
+4. **Equilibrio** — el cilindro estirado con espacio muerto en el medio + descripción flotando sin ancla = peso visual mal distribuido. Se resuelve reduciendo la altura del cilindro (más densidad de tubos = más peso perceptivo del grupo) y bajando el texto al zócalo del mismo.
+
+**Conclusión:** el home intermedio debe replicar la lógica **desktop** (dos columnas 55/45, descripción absolute anclada a la base interna del cilindro y alineada por el borde izquierdo del tubo visible), simplemente con **menos texto** (solo Nº + descriptor).
+
+---
+
+## Cambios (solo `src/index.css`)
+
+### 1. Volver al layout tipo desktop en el rango intermedio
+
+Reemplazar el grid 1fr/1fr por el mismo grid 55/45 del desktop:
 
 ```css
 .catalog-stage {
-  height: clamp(360px, 56vw, 440px);   /* proporción ~mobile landscape */
-  min-height: clamp(360px, 56vw, 440px);
-  max-height: 440px;
-  aspect-ratio: auto;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr);
-  padding: 48px 12px 12px;
-  overflow: hidden;
+  grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
+  grid-template-rows: 1fr;
+  column-gap: 0;
+  padding: 0;
+  height: min(100svh, 520px);
+  min-height: min(100svh, 380px);
+  max-height: 520px;
 }
 ```
 
-Sale del `100svh` que hoy hace que en tablet el stage ocupe toda la pantalla. Debajo del stage la página sigue fluyendo (secciones, footer).
+- `.selector-visual-stage` → columna 1 (botellas), como en desktop.
+- `.selector-panel` → columna 2 (tubos + descripción), como en desktop.
+- `.line-indicator { display: none }` — se mantiene (menos texto).
 
-### 2. Cilindros acotados al alto del contenedor
+### 2. Cilindro más compacto para aumentar proximidad entre tubos
 
-- `.selector-visual-stage` (col 1) y `.selector-panel` (col 2) ocupan solo la fila 2, `height: 100%`, `overflow: hidden`.
-- `.category-cylinder-shell { transform: scale(0.42); transform-origin: center }`.
-- `.tube-cylinder-shell`:
-  - `min-height: 0` (quitar el `min-height: clamp(...)` que hoy lo empuja).
-  - `height: 100%`.
-  - `--tube-item-width: clamp(100px, 20vw, 160px)`.
-  - `--tube-visual-half-width: clamp(50px, 10vw, 80px)`.
-  - Elimina la regla que lo hacía crecer de arriba a abajo del stage completo — ahora el stage ya no es 100svh.
+Bajar la altura útil del `.tube-cylinder-shell` fuerza a `getTubeCylinderState` a calcular un `radiusY` menor → tubos más juntos, cilindro más denso:
 
-### 3. Descripción corta: SOLO Nº + descriptor, debajo del cilindro derecho
+```css
+.selector-panel {
+  align-items: center;
+  justify-content: center;
+  padding: clamp(48px, 8vw, 72px) clamp(18px, 3vw, 32px)
+           clamp(24px, 4vw, 40px);
+}
 
-Revertir el `position: absolute` que la ponía abajo-izquierda. Vuelve al flujo dentro de `.selector-panel`, justo debajo de `.tube-cylinder-shell`.
+.tube-cylinder-shell {
+  --tube-item-width: clamp(220px, 28vw, 320px);
+  --tube-visual-half-width: clamp(110px, 14vw, 160px);
+  height: clamp(260px, 38vh, 340px);   /* antes ocupaba 100% ≈ 500px */
+  min-height: 0;
+  max-height: 100%;
+}
+```
 
-- `.selector-panel { position: relative; overflow: visible; flex-direction: column; justify-content: center; gap: 8px }`.
-- `.tube-cylinder-shell { position: relative }` (volver al default).
-- `.catalog-stage .active-tube-description`:
-  - `position: static` (quitar absolute).
-  - `text-align: center`, `padding: 4px 12px 0`, `gap: 2px`, `max-width: 100%`.
+Efecto: `radiusY ≈ 340 * 0.44 = 150px` (antes ~230px). La distancia vertical entre tubos consecutivos cae de ~40px a ~26px. Grupo perceptible como un único cilindro.
 
-Ocultar todo lo que no sea número + descriptor:
+### 3. Descripción anclada a la base del cilindro, alineada al borde izquierdo del tubo
+
+Volver a usar el mismo posicionamiento del desktop (líneas 669-684 de `index.css`), pero con menos contenido:
+
+```css
+.catalog-stage .active-tube-description {
+  position: absolute;
+  left: calc(50% - var(--tube-visual-half-width));
+  bottom: clamp(12px, 3vh, 24px);
+  z-index: 260;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 4px;
+  max-width: min(80%, 320px);
+  pointer-events: none;
+}
+```
+
+- `left: calc(50% - var(--tube-visual-half-width))` → la "N" de Nº7 y la "F" de Floral quedan exactamente sobre la vertical del borde izquierdo del tubo central. Alineación común activada.
+- `bottom` reducido → la base del texto comparte línea con la base visual del cilindro. Figura unificada.
+- `align-items: flex-start` + `text-align: left` → todas las líneas comparten la misma vertical izquierda.
+
+### 4. Solo Nº + descriptor (menos texto que desktop)
+
 ```css
 .catalog-stage .active-tube-description .active-tube-meta,
 .catalog-stage .active-tube-description p,
 .catalog-stage .active-tube-description span:not(.active-tube-number) {
   display: none;
 }
-.catalog-stage .active-tube-description .active-tube-number { display: block; font-size: clamp(16px, 2.4vw, 22px) }
-.catalog-stage .active-tube-description strong { display: block; font-size: clamp(14px, 2vw, 20px) }
+
+.catalog-stage .active-tube-description .active-tube-number {
+  display: block;
+  font-size: clamp(20px, 2.6vw, 28px);
+  line-height: 1;
+}
+
+.catalog-stage .active-tube-description strong {
+  display: block;
+  font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1.05;
+}
 ```
 
-Queda:
-```
-Nº7
-Floral oriental dulce
-```
+Dos líneas exactas: `Nº7` / `Floral oriental dulce`.
 
-### 4. Sin chips de categoría
+### 5. Limpieza
 
-`.line-indicator { display: none }` — se mantiene.
+Eliminar del bloque intermedio actual:
+- `flex-direction: column` y `gap` de `.selector-panel` (vuelve al desktop).
+- `height: auto`, `flex: 0 0 auto` y `padding` centrado de `.active-tube-description`.
+- Overrides que ponían la descripción en el flujo debajo del cilindro.
 
-### 5. Limpieza de overrides previos
+### 6. Chrome (sin cambios)
 
-Eliminar del bloque intermedio:
-- `.catalog-stage > .selector-panel { position: static !important }`
-- `.catalog-stage .tube-cylinder-shell { position: static !important }`
-- Regla que estiraba `.active-tube-description` con `position: absolute; left: 12px; bottom: 12px; width: min(52%, 420px)`.
+`.floating-header`, `.ommi-cookie-bar` y grids de secciones a 3 columnas: se mantienen igual que hoy.
 
-### 6. Grids de secciones (sin cambios respecto a lo ya hecho)
-
-Se mantienen `.ommi-featured-grid`, `.ommi-explore-grid`, `.conjuntos-banner-list` a 3 columnas.
-
-### 7. Chrome
-
-`.floating-header` y `.ommi-cookie-bar` — sin cambios respecto a lo ya hecho.
+---
 
 ## Verificación (Playwright)
 
-Capturas a: 844×390 (mobile landscape referencia), 768×1024 (tablet portrait), 1024×600 (tablet landscape), 820×1180, y 375×667 + 1440×900 como control.
+Capturas a: **844×390** (mobile landscape), **768×1024** (tablet portrait), **1024×600** (tablet landscape), **820×1180**, más **375×667** y **1440×900** como control.
 
-Chequear en cada una:
-1. `.catalog-stage` alto ≈ 400px (no 100svh en tablet).
-2. Cilindro izquierdo (botellas) y cilindro derecho (tubos) visibles completos lado a lado.
-3. Debajo del cilindro derecho: solo "Nº7" y "Floral oriental dulce", centrado, 2 líneas.
-4. Debajo del stage, la página sigue con las secciones (ommi-featured, explore, etc.) a 3 columnas.
-5. Sin chips DÍA/NOCHE.
-6. Mobile portrait 375×667 y desktop 1440×900 sin cambios.
+Checklist visual en cada una:
+1. Layout 55/45 (botellas izq, cilindro tubos der), sin chips.
+2. Tubos visiblemente **más juntos** que en la captura actual — se lee como un cilindro, no como tubos sueltos.
+3. `Nº7` y `Floral oriental dulce` **alineados a la izquierda** entre sí, sobre la vertical del borde izquierdo del tubo central.
+4. La base del texto **comparte línea horizontal** con la base del cilindro (bottom inside, no debajo).
+5. Sin descripción larga ni meta.
+6. Desktop y mobile portrait sin cambios.
 
 ## Archivos
 
-- `src/index.css` — único archivo modificado. Sin cambios en componentes React ni en data.
+- `src/index.css` — único archivo. Sin cambios en componentes ni data.
