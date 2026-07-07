@@ -2437,9 +2437,9 @@ button {
     position: relative;
   }
 
-  .selector-panel {
+  .catalog-stage > .selector-panel {
     overflow: visible;
-    position: static;
+    position: static !important;
   }
 
   .catalog-stage .active-tube-description {
