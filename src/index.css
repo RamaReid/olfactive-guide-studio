@@ -1874,6 +1874,213 @@ button {
   font-weight: 760;
 }
 
+/* =====================================================================
+   Responsive < 1024px (mobile-first fluido)
+   Reglas exclusivamente aditivas — desktop (>=1024px) intacto.
+   ===================================================================== */
+
+@media (max-width: 1023.98px) {
+  /* --- CatalogStage: apilar carrusel y rack --- */
+  .catalog-stage {
+    display: grid;
+    width: 100%;
+    min-height: 100svh;
+    height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 60svh) auto;
+    overflow: visible;
+  }
+
+  .selector-visual-stage {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding-top: clamp(72px, 12vw, 108px);
+  }
+
+  .selector-panel {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: clamp(18px, 4vw, 32px) clamp(16px, 4vw, 32px)
+      clamp(28px, 5vw, 48px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 0;
+    overflow: visible;
+  }
+
+  /* --- Carrusel de botellas: reducir escala para que no se cortan --- */
+  .category-cylinder {
+    perspective: 1400px;
+    min-height: clamp(320px, 55svh, 520px);
+  }
+
+  .category-bottle {
+    width: clamp(150px, 34vw, 220px);
+    height: clamp(280px, 60vw, 420px);
+  }
+
+  /* --- Line indicator no debe tapar la botella --- */
+  .line-indicator {
+    position: static;
+    transform: none;
+    width: 100%;
+    margin: clamp(12px, 3vw, 22px) auto 0;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-inline: clamp(12px, 4vw, 24px);
+  }
+
+  /* --- Header --- */
+  .header-overlay {
+    height: clamp(72px, 12vw, 108px);
+  }
+
+  .header-inner {
+    height: auto;
+    min-height: 60px;
+    padding-inline: clamp(14px, 4vw, 28px);
+  }
+
+  .header-cart-label {
+    display: none;
+  }
+
+  /* --- TubeRack: pasar a carrusel horizontal --- */
+  .tube-cylinder-shell {
+    --tube-item-width: clamp(240px, 72vw, 360px);
+    --tube-visual-half-width: clamp(120px, 36vw, 200px);
+    min-height: clamp(300px, 50vw, 420px);
+  }
+
+  .tube-cylinder-shell::after {
+    display: none;
+  }
+
+  .active-tube-description {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    margin: clamp(10px, 3vw, 18px) auto 0;
+    max-width: min(94%, 480px);
+    align-items: center;
+    text-align: center;
+  }
+
+  /* --- Grids de secciones --- */
+  .ommi-featured-grid {
+    grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 44vw, 300px), 1fr));
+  }
+
+  .ommi-featured-card {
+    grid-column: auto;
+  }
+
+  .ommi-explore-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .ommi-testimonial-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  /* --- Social / About / Newsletter: apilar --- */
+  .ommi-social-section,
+  .ommi-about-section,
+  .ommi-newsletter-section {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .ommi-social-product {
+    aspect-ratio: auto;
+    max-height: 60vh;
+  }
+
+  /* --- Footer --- */
+  .ommi-footer {
+    grid-template-columns: 1fr;
+    gap: clamp(24px, 5vw, 40px);
+  }
+
+  .ommi-footer-nav {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  /* --- Conjuntos combo banner --- */
+  .conjuntos-combo-banner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .conjuntos-combo-image-frame {
+    height: clamp(160px, 40vw, 280px);
+  }
+}
+
+@media (max-width: 640px) {
+  .header-nav {
+    display: none;
+  }
+
+  .catalog-stage {
+    grid-template-rows: minmax(0, 55svh) auto;
+  }
+
+  .category-bottle {
+    width: clamp(140px, 44vw, 200px);
+    height: clamp(260px, 78vw, 380px);
+  }
+
+  .tube-cylinder-shell {
+    --tube-item-width: 84vw;
+    --tube-visual-half-width: 42vw;
+    min-height: clamp(260px, 70vw, 360px);
+  }
+
+  .active-tube-description strong {
+    font-size: clamp(20px, 5vw, 26px);
+  }
+
+  .ommi-featured-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ommi-explore-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ommi-testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ommi-newsletter-form div {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ommi-cookie-bar {
+    left: clamp(10px, 3vw, 20px);
+    right: clamp(10px, 3vw, 20px);
+    max-width: none;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ommi-footer-legal {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ommi-section {
+    padding: clamp(32px, 9vw, 56px) clamp(16px, 5vw, 28px);
+  }
+}
+
 @media (max-width: 1080px) {
   .ommi-featured-card {
     grid-column: span 6;
