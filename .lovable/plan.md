@@ -1,49 +1,52 @@
-## Problema real
+## Objetivo
 
-En el sitio **publicado** (`ommirama.lovable.app`), todas las imágenes de `public/ommi_other/*.webp` que tienen **espacios o paréntesis en el nombre del archivo** devuelven **HTTP 404**. Por eso se ve el ícono de imagen rota:
+Adaptar la **pantalla principal** al rango intermedio (teléfono en landscape + tablet chica, ~641-1023 px de ancho o alto ≤500 en landscape) siguiendo la misma filosofía que el mobile: sin chips de categoría, solo los dos cilindros y una explicación corta del perfume seleccionado. La única diferencia respecto a mobile es que aquí los cilindros van **uno al lado del otro** (aprovechando el ancho horizontal). Y en las grillas de secciones, usar **3 cards** por fila donde el ancho lo permite. Sin tocar mobile portrait ni desktop.
 
-- Cards destacados de la home ("Fragancias con presencia")
-- Combo "OMMI 100 ml + 3 Decants" de la sección Conjuntos
-- Video hero de `ExpandedOmmiSections` (poster)
-- `InfoPage` (fallback a `OMMI Firma.webp`)
-- Cajas por línea en `ProductPage`
+## Estado actual en ese rango (verificado con Playwright)
 
-En el preview local no se notaba porque Vite dev-server sí sirve archivos con espacios; el hosting estático de Lovable no.
+- El `.catalog-stage` usa el layout de desktop (columnas 55/45) → la botella hero queda cortada a la izquierda y el `line-indicator` se superpone.
+- Los chips DÍA/NOCHE/PIEL/... aparecen y estorban en un espacio donde no caben.
+- Las grillas de "Fragancias con presencia" y "Conjuntos" quedan en 1 columna (herencia del mobile) desaprovechando ancho.
+- El banner de cookies tapa las CTAs.
 
-## Solución
+## Cambios (solo `src/index.css`, sin tocar componentes)
 
-Renombrar los 10 archivos a slugs sin espacios ni paréntesis, corregir de paso el typo "Discobery" → "discovery", y actualizar todas las referencias.
+Nuevo bloque:
 
-### Renombres (`public/ommi_other/`)
-
-```
-OMMI Dia.webp                        → ommi-dia.webp
-OMMI Noche.webp                      → ommi-noche.webp
-OMMi Piel.webp                       → ommi-piel.webp
-OMMI Firma.webp                      → ommi-firma.webp
-OMMI Regalo.webp                     → ommi-regalo.webp
-OMMI Discobery Set dia.webp          → ommi-discovery-set-dia.webp
-OMMI Discobery Set Noche .webp       → ommi-discovery-set-noche.webp
-OMMI Discobery Set piel.webp         → ommi-discovery-set-piel.webp
-OMMI Discobery Set Firma (2).webp    → ommi-discovery-set-firma.webp
-OMMI Discobery Set Regalo.webp       → ommi-discovery-set-regalo.webp
+```css
+@media (min-width: 641px) and (max-width: 1023.98px),
+       (orientation: landscape) and (max-height: 500px) and (max-width: 1023.98px) {
+  /* ...reglas... */
+}
 ```
 
-Los archivos `herointerno1.webp` y `herointerno2.webp` ya están bien.
+### A. Escenario principal — dos cilindros lado a lado
 
-### Referencias a actualizar
+- `.catalog-stage`: `grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto;` — columna izquierda = `BottleCarousel`, columna derecha = `TubeRack`, fila inferior (span 2) = descripción corta del perfume seleccionado.
+- `.line-indicator`: `display: none` (igual que mobile).
+- `.category-cylinder`, `.tube-cylinder-shell`: escalados para que quepan sin desbordar (`scale`/`max-height`).
+- `.active-tube-description`: visible con `número + familia + inspirado en` (versión compacta, sin el párrafo largo).
+- Botella activa e info del catálogo: `max-width` para que no se estire.
 
-- `src/data/ommiCatalog.ts` — funciones que devuelven las rutas (`categoryAssetPath` para cajas de línea y `discoverySetAssetPath` para los sets), líneas 88–120.
-- `src/components/sections/ExpandedOmmiSections.tsx` — `src` del `<img>` en el video hero (línea 119) y `poster` del `<video>` (línea 130).
-- `src/components/sections/ConjuntosOmmiSection.tsx` — `bottleSrc` y `discoverySrc` del combo (líneas 16–17).
-- `src/pages/InfoPage.tsx` — fallback `/ommi_other/OMMI Firma.webp` (línea 31).
+### B. Grillas de sección — 3 cards por fila
 
-Ninguna otra sección referencia estos archivos por ruta literal.
+- `.ommi-featured-grid` (Destacados): `grid-template-columns: repeat(3, minmax(0, 1fr));` con `gap: 12px`.
+- `.conjuntos-banner-list` (Conjuntos): 3 columnas cuando `min-width: 720px`, si no, 2. El combo grande sigue full-width.
+- `.ommi-explore-grid`: 3 columnas.
+
+### C. Chrome (header + cookie banner)
+
+- `.floating-header`: `padding-block` reducido para no comer alto en landscape.
+- `.cookie-consent`: en `max-height <= 520px`, pill compacto bottom-right (`max-width: 360px`), en vez de barra full-width que tapa CTAs.
 
 ## Verificación
 
-1. `bun run build` sin errores.
-2. Playwright contra `http://localhost:8080/`: `Array.from(document.images).filter(i => i.complete && i.naturalWidth === 0)` debe quedar vacío tras scroll completo.
-3. Después de publicar, repetir el check contra `https://ommirama.lovable.app/` — no debe haber 404 de imágenes.
+- Playwright a **667×375, 844×390, 1024×600, 820×1180**: dos cilindros visibles lado a lado, descripción corta debajo, sin chips, sin overflow, cookie banner discreto.
+- Screenshots antes/después a **375×667 (mobile portrait)** y **1440×900 (desktop)**: sin cambios visuales.
+- `bun run build` sin errores.
 
-## ¿Aplico este cambio?
+## Archivos afectados
+
+- `src/index.css` únicamente.
+
+¿Aplico?
