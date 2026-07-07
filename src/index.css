@@ -2399,6 +2399,7 @@ button {
   .selector-panel {
     grid-column: 2;
     grid-row: 1;
+    position: static;
     display: flex;
     flex-direction: column;
     align-items: center;
