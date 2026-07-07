@@ -2335,8 +2335,8 @@ button {
    descripción corta) pero con los dos cilindros lado a lado.
    No pisa mobile portrait (<=640) ni desktop (>=1024).
    ===================================================================== */
-@media (min-width: 641px) and (max-width: 1023.98px),
-       (orientation: landscape) and (max-height: 500px) and (max-width: 1023.98px) {
+@media (min-width: 641px) and (max-width: 1120px),
+       (orientation: landscape) and (max-height: 500px) and (max-width: 1120px) {
   /* --- Escenario principal: dos cilindros uno al lado del otro --- */
   .catalog-stage {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
