@@ -2355,6 +2355,21 @@ button {
   }
 
   /* Botellas: columna izquierda (55%) */
+  .catalog-stage::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 25%;
+    pointer-events: none;
+    z-index: 3;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+  }
+
   .selector-visual-stage {
     grid-column: 1;
     grid-row: 1;
