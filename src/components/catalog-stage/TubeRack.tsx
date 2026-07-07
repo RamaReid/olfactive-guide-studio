@@ -54,26 +54,33 @@ const getTubeCylinderState = (
   offset: number,
   stageHeight: number,
   isSettled: boolean,
+  isCompact: boolean,
 ) => {
   const angleStep = 360 / 26
   const angleDeg = offset * angleStep
   const angleRad = (angleDeg * Math.PI) / 180
-  const radiusY = Math.min(Math.max(180, stageHeight * 0.44), stageHeight * 0.46)
-  const radiusZ = Math.max(150, stageHeight * 0.18)
+  const radiusY = isCompact
+    ? Math.min(Math.max(120, stageHeight * 0.28), stageHeight * 0.32)
+    : Math.min(Math.max(180, stageHeight * 0.44), stageHeight * 0.46)
+  const radiusZ = isCompact
+    ? Math.max(110, stageHeight * 0.14)
+    : Math.max(150, stageHeight * 0.18)
   const y = Math.sin(angleRad) * radiusY
   const z = Math.cos(angleRad) * radiusZ
   const zNorm = (z + radiusZ) / (radiusZ * 2)
   const isCenter = offset === 0
   const baseScale = 0.26 + zNorm * 0.74
+  const centerScale = isCenter && !isSettled && isCompact ? Math.max(baseScale, 0.9) : baseScale
   const baseOpacity = 0.12 + zNorm * 0.88
+  const rotateFactor = isCompact ? 0.35 : 0.55
 
   return {
     y,
     z,
-    scale: isCenter && isSettled ? 1.1 : baseScale,
+    scale: isCenter && isSettled ? 1.1 : centerScale,
     opacity: baseOpacity,
     blur: (1 - zNorm) * 4.6,
-    rotateX: -angleDeg * 0.55,
+    rotateX: -angleDeg * rotateFactor,
     zIndex: Math.round(zNorm * 100),
   }
 }
@@ -91,6 +98,18 @@ export function TubeRack({
   const [stageHeight, setStageHeight] = useState(760)
   const [isCylinderSettled, setIsCylinderSettled] = useState(true)
   const [displayedFragranceId, setDisplayedFragranceId] = useState<string | null>(null)
+  const [isCompact, setIsCompact] = useState(
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 640px)').matches : false,
+  )
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(max-width: 640px)')
+    const handler = (event: MediaQueryListEvent) => setIsCompact(event.matches)
+    setIsCompact(mq.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   const filteredFragrances = useMemo(() => {
     if (lineShowsAllFragrances(activeLine.id)) {
@@ -226,7 +245,7 @@ export function TubeRack({
         <div className="tube-cylinder-track">
           {visibleFragrances.map(({ fragrance, distance }) => {
             const isActive = fragrance.id === activeFragrance.id
-            const state = getTubeCylinderState(distance, stageHeight, isCylinderSettled)
+            const state = getTubeCylinderState(distance, stageHeight, isCylinderSettled, isCompact)
 
             return (
               <button

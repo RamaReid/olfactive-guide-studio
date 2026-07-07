@@ -1,40 +1,36 @@
-## Objetivo
+## Diagnóstico
 
-En mobile (`@media (max-width: 640px)`):
-1. El cilindro de tubos siempre se ve completo (nunca recortado arriba/abajo ni a los lados).
-2. Los tubos se siguen repitiendo cuando la categoría no llena el cilindro (ya está implementado con `wrapIndex`, se conserva).
-3. El número del tubo aparece también dentro de la descripción, no solo como badge grande separado.
+No es solo renderizado. Cuando el cilindro rota, los tubos periféricos viajan verticalmente hasta ~`stageHeight * 0.44` px desde el centro (fórmula en `getTubeCylinderState` de `TubeRack.tsx`). En mobile el shell mide ~360-460px de alto, así que los tubos en tránsito recorren ±200px y se salen del área visible del cilindro (y del row del grid `.catalog-stage: minmax(0, 55svh)`), aunque en reposo el central se ve completo.
+
+Además, en tránsito el tubo central baja de `scale 1.1` a `baseScale`, lo que refuerza la sensación de "no está completo".
 
 ## Cambios
 
-### 1. `src/index.css` — bloque `@media (max-width: 640px)`
+### 1. `src/components/catalog-stage/TubeRack.tsx` — radio responsivo
 
-**Cilindro completo:**
-- Quitar el `min-height: clamp(200px, 52vw, 280px)` que está recortando el cilindro.
-- Dar al `.tube-cylinder-shell` una altura mínima suficiente para que los tubos periféricos no queden fuera: `min-height: clamp(360px, 92vw, 460px)`.
-- Asegurar `overflow: visible` en `.tube-cylinder-stage` y `.tube-cylinder-track` (los tubos rotan en 3D y no deben ser clipeados por el contenedor).
-- Reducir `--tube-item-width` a `clamp(150px, 48vw, 220px)` y `--tube-visual-half-width` proporcional, para que el tubo central + los dos vecinos siempre entren dentro del ancho de pantalla.
-- Añadir `padding-inline: clamp(8px, 3vw, 16px)` al shell para respetar márgenes laterales.
+En `getTubeCylinderState`, aceptar un segundo parámetro `isCompactViewport: boolean` (o leer `window.innerWidth`) y reducir el radio vertical y la rotación en mobile:
 
-**Número dentro de la descripción:**
-- Mostrar de nuevo la línea `Categoría - Audiencia` (span oculto actualmente) prefijada con el número.
-- Se implementa vía CSS + un pequeño cambio en `TubeRack.tsx` para incluir el número inline en el span (opción más limpia que un `::before` con `content: attr()`).
+- `radiusY` compact: `Math.min(Math.max(120, stageHeight * 0.28), stageHeight * 0.32)` (antes 0.44-0.46).
+- `radiusZ` compact: `Math.max(110, stageHeight * 0.14)`.
+- `rotateX` compact: `-angleDeg * 0.35` (antes 0.55) para que los tubos periféricos no se inclinen tanto y no crezcan hacia afuera.
+- Mantener `scale` central `1.1` en reposo; en tránsito subir el `baseScale` mínimo del centro a `0.9` para que nunca se vea "cortado" mientras rota.
 
-### 2. `src/components/catalog-stage/TubeRack.tsx`
+Detectar viewport con un pequeño `useEffect` + `matchMedia('(max-width: 640px)')` guardado en state (`isCompact`), y pasarlo a `getTubeCylinderState`.
 
-- En el bloque `active-tube-description`, cambiar la primera línea `<span>` de categoría/audiencia para incluir el número:
-  ```
-  Nº{number} · {categoría} - {audiencia}
-  ```
-- El `.active-tube-number` grande sigue mostrándose en desktop; en mobile se puede ocultar (ya que el número queda inline en la descripción) para no duplicar.
+### 2. `src/index.css` — asegurar que no clipea ningún ancestro en mobile
 
-### 3. Repetición de tubos (sin cambios de código)
+Dentro de `@media (max-width: 640px)`:
+- `.catalog-stage { overflow: visible; }` para que el row del grid no recorte el cilindro cuando los tubos viajan.
+- `.tube-cylinder-shell` sube `min-height` a `clamp(400px, 100vw, 520px)` para dar aire vertical al recorrido reducido.
+- Confirmar `overflow: visible` en `.tube-cylinder-stage` y `.tube-cylinder-track` (ya está).
 
-`filteredFragrances` con `wrapIndex` ya rellena los 13 offsets repitiendo la categoría cuando `filteredFragrances.length < visibleOffsets.length`. Se deja tal cual.
+### 3. Sin cambios en desktop
+
+Los ajustes de radio/rotación/scale sólo se aplican cuando `isCompact` es `true`. Desktop conserva la fórmula original.
 
 ## Verificación
 
-Playwright a 390×844:
-- Screenshot del cilindro en una categoría con pocos tubos (ej. no-mixto) → confirmar que se ven 3 tubos completos sin recorte, y que se repiten en los offsets externos.
-- Screenshot de la descripción → confirmar que el número aparece dentro de la línea de descripción.
-- Screenshot a 1440×900 → confirmar que desktop no cambió.
+Playwright 390×844:
+- Screenshot inicial del cilindro en reposo (central completo).
+- Simular scroll/rueda sobre el cilindro para forzar rotación y capturar mid-transition → confirmar que el tubo central sigue completo y los vecinos no se cortan arriba/abajo.
+- Screenshot 1440×900 → confirmar desktop sin cambios.
