@@ -51,6 +51,8 @@ export function ExpandedOmmiSections() {
                   <img
                     src={line.assets.boxHint}
                     alt={`Caja OMMI N ${fragrance.number} ${fragrance.referenceName}`}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </span>
                 <span className="ommi-featured-copy">
@@ -114,11 +116,19 @@ export function ExpandedOmmiSections() {
             </a>
           </div>
           <div className="ommi-social-product">
-            <img src="/ommi_other/OMMI%20Firma.webp" alt="OMMI Firma" />
+            <img src="/ommi_other/OMMI%20Firma.webp" alt="OMMI Firma" loading="lazy" decoding="async" />
           </div>
         </div>
         <div className="ommi-social-media">
-          <video src="/ommi_other/OMMI.mp4" autoPlay muted loop playsInline />
+          <video
+            src="/ommi_other/OMMI.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+            poster="/ommi_other/OMMI%20Firma.webp"
+          />
         </div>
       </section>
 
