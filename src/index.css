@@ -2342,8 +2342,8 @@ button {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr) auto;
     column-gap: 12px;
-    row-gap: 8px;
-    padding: 56px 12px 12px;
+    row-gap: 6px;
+    padding: 48px 12px 8px;
     overflow: hidden;
     height: 100svh;
     min-height: 100svh;
@@ -2376,7 +2376,7 @@ button {
   }
 
   .category-cylinder-shell {
-    transform: scale(0.48);
+    transform: scale(0.42);
     transform-origin: center;
   }
 
@@ -2401,9 +2401,9 @@ button {
   }
 
   .tube-cylinder-shell {
-    --tube-item-width: clamp(120px, 24vw, 180px);
-    --tube-visual-half-width: clamp(60px, 12vw, 90px);
-    min-height: clamp(280px, 55vh, 460px);
+    --tube-item-width: clamp(100px, 20vw, 160px);
+    --tube-visual-half-width: clamp(50px, 10vw, 80px);
+    min-height: clamp(220px, 44vh, 380px);
     padding-inline: clamp(6px, 2vw, 14px);
     overflow: visible;
     scrollbar-width: none;
