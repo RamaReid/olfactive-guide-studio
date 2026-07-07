@@ -87,19 +87,19 @@ const bottleAssetPath = (number: string) => `/ommi_bottle_number/b_N${number}.we
 const lineBoxAssetPath = (entryId: OmmiEntryId) => {
   switch (entryId) {
     case 'dia':
-      return '/ommi_other/OMMI Dia.webp'
+      return '/ommi_other/ommi-dia.webp'
     case 'noche':
-      return '/ommi_other/OMMI Noche.webp'
+      return '/ommi_other/ommi-noche.webp'
     case 'piel':
-      return '/ommi_other/OMMi Piel.webp'
+      return '/ommi_other/ommi-piel.webp'
     case 'firma':
-      return '/ommi_other/OMMI Firma.webp'
+      return '/ommi_other/ommi-firma.webp'
     case 'regalo':
-      return '/ommi_other/OMMI Regalo.webp'
+      return '/ommi_other/ommi-regalo.webp'
     case 'mixto':
-      return '/ommi_other/OMMI Firma.webp'
+      return '/ommi_other/ommi-firma.webp'
     case 'discovery':
-      return '/ommi_other/OMMI Discobery Set dia.webp'
+      return '/ommi_other/ommi-discovery-set-dia.webp'
     default:
       return categoryAssetPath(entryId)
   }
@@ -108,15 +108,15 @@ const lineBoxAssetPath = (entryId: OmmiEntryId) => {
 export const discoverySetAssetPath = (entryId: OmmiEntryId) => {
   switch (entryId) {
     case 'dia':
-      return '/ommi_other/OMMI Discobery Set dia.webp'
+      return '/ommi_other/ommi-discovery-set-dia.webp'
     case 'noche':
-      return '/ommi_other/OMMI Discobery Set Noche .webp'
+      return '/ommi_other/ommi-discovery-set-noche.webp'
     case 'piel':
-      return '/ommi_other/OMMI Discobery Set piel.webp'
+      return '/ommi_other/ommi-discovery-set-piel.webp'
     case 'firma':
-      return '/ommi_other/OMMI Discobery Set Firma (2).webp'
+      return '/ommi_other/ommi-discovery-set-firma.webp'
     case 'regalo':
-      return '/ommi_other/OMMI Discobery Set Regalo.webp'
+      return '/ommi_other/ommi-discovery-set-regalo.webp'
     default:
       return undefined
   }

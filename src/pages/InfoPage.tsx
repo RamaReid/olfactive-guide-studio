@@ -28,7 +28,7 @@ export function InfoPage({ kicker, title, body, artwork }: InfoPageProps) {
 
           <div className="info-page-artwork">
             <img
-              src={artwork?.src ?? '/ommi_other/OMMI Firma.webp'}
+              src={artwork?.src ?? '/ommi_other/ommi-firma.webp'}
               alt={artwork?.alt ?? ''}
               loading="lazy"
               decoding="async"

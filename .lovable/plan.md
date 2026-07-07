@@ -1,83 +1,49 @@
-## Objetivo
+## Problema real
 
-Que las fotos del sitio (botellas, tubos, hero, secciones) se vean/carguen más rápido, sobre todo en mobile.
+En el sitio **publicado** (`ommirama.lovable.app`), todas las imágenes de `public/ommi_other/*.webp` que tienen **espacios o paréntesis en el nombre del archivo** devuelven **HTTP 404**. Por eso se ve el ícono de imagen rota:
 
-## Diagnóstico
+- Cards destacados de la home ("Fragancias con presencia")
+- Combo "OMMI 100 ml + 3 Decants" de la sección Conjuntos
+- Video hero de `ExpandedOmmiSections` (poster)
+- `InfoPage` (fallback a `OMMI Firma.webp`)
+- Cajas por línea en `ProductPage`
 
-Total actual de imágenes en `public/`: ~28 MB.
+En el preview local no se notaba porque Vite dev-server sí sirve archivos con espacios; el hosting estático de Lovable no.
 
-- `public/ommi_other/` → **23 MB** (los hero de línea/discovery: 140–300 KB cada uno).
-- `public/ommi_bottle_number/` → 4.5 MB (~80–140 KB cada uno).
-- `public/ommi_bottle_carrusel/` → 557 KB.
-- `public/ommi_tubes_number/` → 754 KB (tubos ~30 KB, ya ok).
+## Solución
 
-Aunque todo es `.webp`, en mobile 3G/4G se nota porque:
+Renombrar los 10 archivos a slugs sin espacios ni paréntesis, corregir de paso el typo "Discobery" → "discovery", y actualizar todas las referencias.
 
-1. Los cards de secciones cargan hero grandes (200–300 KB) inmediatamente.
-2. `BottleCarousel` y `LineIndicator` importan las 7 botellas de una vez.
-3. `TubeRack` renderiza 13 `<img>` en el DOM aunque solo se vean 5–7.
-4. Ningún `<img>` tiene `width`/`height` ni `decoding="async"`; el hero de portada no está *preloaded*.
-5. Se sirven desde `public/`, sin CDN; cada request pasa por el servidor de la app.
+### Renombres (`public/ommi_other/`)
 
-## Plan de mejoras (en orden de impacto)
+```
+OMMI Dia.webp                        → ommi-dia.webp
+OMMI Noche.webp                      → ommi-noche.webp
+OMMi Piel.webp                       → ommi-piel.webp
+OMMI Firma.webp                      → ommi-firma.webp
+OMMI Regalo.webp                     → ommi-regalo.webp
+OMMI Discobery Set dia.webp          → ommi-discovery-set-dia.webp
+OMMI Discobery Set Noche .webp       → ommi-discovery-set-noche.webp
+OMMI Discobery Set piel.webp         → ommi-discovery-set-piel.webp
+OMMI Discobery Set Firma (2).webp    → ommi-discovery-set-firma.webp
+OMMI Discobery Set Regalo.webp       → ommi-discovery-set-regalo.webp
+```
 
-### 1. Recomprimir `public/ommi_other/` (mayor ganancia, ~15 MB menos)
+Los archivos `herointerno1.webp` y `herointerno2.webp` ya están bien.
 
-Reencodear los `.webp` grandes a calidad ~72 con `cwebp`/`sharp`, apuntando a:
+### Referencias a actualizar
 
-- Cards de secciones (hero de línea): máx 1200 px de ancho, ~80–120 KB.
-- Hero interno (`herointerno1/2.webp`): máx 1600 px, ~120 KB.
-- Discovery sets: máx 1200 px, ~100 KB.
+- `src/data/ommiCatalog.ts` — funciones que devuelven las rutas (`categoryAssetPath` para cajas de línea y `discoverySetAssetPath` para los sets), líneas 88–120.
+- `src/components/sections/ExpandedOmmiSections.tsx` — `src` del `<img>` en el video hero (línea 119) y `poster` del `<video>` (línea 130).
+- `src/components/sections/ConjuntosOmmiSection.tsx` — `bottleSrc` y `discoverySrc` del combo (líneas 16–17).
+- `src/pages/InfoPage.tsx` — fallback `/ommi_other/OMMI Firma.webp` (línea 31).
 
-Objetivo: bajar la carpeta de 23 MB → ~5 MB sin pérdida visible.
-
-### 2. Migrar `public/` a CDN de Lovable Assets
-
-Aplicar el skill `migrate-to-assets` sobre los `.webp` >100 KB. Beneficio:
-
-- Se sirven desde CDN global con cache agresivo (mucho más rápido que el server actual).
-- El repo baja de ~28 MB a casi nada.
-- Se reemplazan referencias en `src/data/ommiCatalog.ts`, `src/data/ommiContent.ts` y componentes por punteros `.asset.json`.
-
-### 3. Atributos de performance en todos los `<img>`
-
-En `BottleAvatar`, `TubeRack`, `BottleCarousel`, `LineIndicator`, `CatalogShowcaseCard`, `ExpandedOmmiSections`, etc.:
-
-- Añadir `width` y `height` explícitos (evita reflow y acelera decoding).
-- `decoding="async"` en todos.
-- `loading="lazy"` en los que están fuera del viewport inicial (secciones, cards).
-- `fetchpriority="high"` en la botella activa del carrusel y el hero.
-
-### 4. Preload del LCP
-
-En `index.html`, agregar `<link rel="preload" as="image" href="..." fetchpriority="high">` para la botella activa inicial (Firma) y el hero de home, para que el navegador los pida en paralelo con el JS.
-
-### 5. Reducir DOM de imágenes en `TubeRack`
-
-`visibleOffsets` tiene 13 posiciones pero las de blur/opacidad baja no aportan. Bajar a 9 (offsets −4..+4) reduce ~30% de imágenes renderizadas por línea sin cambio visual perceptible, y las que quedan fuera se descargan on-demand cuando el usuario rota.
-
-### 6. (Opcional) `srcset` responsive
-
-Para los cards de sección generar 2 tamaños (mobile 640 px / desktop 1200 px) con `vite-imagetools` o pre-generados, y servir el correcto con `srcset` + `sizes`. Solo si tras 1–4 aún se ve lento en mobile.
+Ninguna otra sección referencia estos archivos por ruta literal.
 
 ## Verificación
 
-- `bun run build` sin errores.
-- Playwright con throttling: medir el peso total transferido en `/` antes/después (esperado: de ~5–7 MB inicial a <1.5 MB).
-- Revisar en preview mobile que el carrusel y las secciones siguen viéndose iguales.
-- Confirmar que no queda ningún `<img>` sin `decoding` o `width/height`.
+1. `bun run build` sin errores.
+2. Playwright contra `http://localhost:8080/`: `Array.from(document.images).filter(i => i.complete && i.naturalWidth === 0)` debe quedar vacío tras scroll completo.
+3. Después de publicar, repetir el check contra `https://ommirama.lovable.app/` — no debe haber 404 de imágenes.
 
-## Archivos afectados (estimado)
-
-- `public/ommi_other/*` (recomprimir + migrar a CDN).
-- `public/ommi_bottle_number/*`, `public/ommi_bottle_carrusel/*` (migrar a CDN).
-- `src/data/ommiCatalog.ts`, `src/data/ommiContent.ts` (rutas → `.asset.json`).
-- `src/components/catalog-stage/*` (atributos `<img>`, reducir `visibleOffsets`).
-- `src/components/sections/*` y `CatalogShowcaseCard.tsx` (`loading`, `decoding`, `width/height`).
-- `index.html` (preloads del LCP, meta tags si aplica).
-
-## Pregunta antes de implementar
-
-¿Aplico los **6 pasos** completos, o preferís que arranque solo con los pasos **1 + 2 + 3 + 4** (los de mayor impacto, sin tocar `visibleOffsets` ni `srcset`)? 
-
- Solo 1+2+3+4
+## ¿Aplico este cambio?

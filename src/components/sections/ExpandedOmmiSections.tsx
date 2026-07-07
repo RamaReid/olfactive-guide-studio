@@ -116,7 +116,7 @@ export function ExpandedOmmiSections() {
             </a>
           </div>
           <div className="ommi-social-product">
-            <img src="/ommi_other/OMMI%20Firma.webp" alt="OMMI Firma" loading="lazy" decoding="async" />
+            <img src="/ommi_other/ommi-firma.webp" alt="OMMI Firma" loading="lazy" decoding="async" />
           </div>
         </div>
         <div className="ommi-social-media">
@@ -127,7 +127,7 @@ export function ExpandedOmmiSections() {
             loop
             playsInline
             preload="none"
-            poster="/ommi_other/OMMI%20Firma.webp"
+            poster="/ommi_other/ommi-firma.webp"
           />
         </div>
       </section>
