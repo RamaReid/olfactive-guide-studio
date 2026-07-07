@@ -2340,42 +2340,64 @@ button {
   /* --- Escenario principal: dos cilindros uno al lado del otro --- */
   .catalog-stage {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
     column-gap: 12px;
     row-gap: 8px;
-    padding: 64px 16px 16px;
+    padding: 56px 12px 12px;
+    overflow: hidden;
+    height: 100svh;
+    min-height: 100svh;
+  }
+
+  /* Header overlay ocupa toda la fila superior */
+  .catalog-stage > .header-overlay {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  /* Botellas: columna izquierda */
+  .selector-visual-stage {
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
     overflow: hidden;
   }
 
-  /* Botellas: columna izquierda, ocupa una sola celda */
-  .category-cylinder {
-    grid-column: 1;
-    grid-row: 1;
-    align-self: center;
-    justify-self: center;
+  .selector-visual-stage .category-cylinder {
     width: 100%;
-    max-width: 100%;
-  }
-
-  .category-cylinder,
-  .category-cylinder-shell {
-    perspective: 900px;
+    height: 100%;
   }
 
   .category-cylinder-shell {
-    transform: scale(0.72);
+    transform: scale(0.48);
     transform-origin: center;
   }
 
-  /* Tubos: columna derecha */
-  .perfume-tube-rack,
-  .tube-cylinder-shell {
+  /* Tubos: columna derecha (selector-panel envuelve al TubeRack) */
+  .selector-panel {
     grid-column: 2;
-    grid-row: 1;
+    grid-row: 2;
+    display: flex;
     align-self: center;
     justify-self: center;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    max-width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .selector-panel .tube-cylinder-shell {
+    width: 100%;
   }
 
   .tube-cylinder-shell {
@@ -2407,10 +2429,9 @@ button {
   }
 
   /* Descripción corta abajo, cruzando las dos columnas */
-  .active-tube-description,
-  .catalog-stage-product-info {
+  .catalog-stage .active-tube-description {
     grid-column: 1 / -1;
-    grid-row: 2;
+    grid-row: 3;
     max-width: 620px;
     margin: 0 auto;
     padding: 0 8px 8px;
