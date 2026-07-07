@@ -1,52 +1,97 @@
 ## Objetivo
 
-Adaptar la **pantalla principal** al rango intermedio (teléfono en landscape + tablet chica, ~641-1023 px de ancho o alto ≤500 en landscape) siguiendo la misma filosofía que el mobile: sin chips de categoría, solo los dos cilindros y una explicación corta del perfume seleccionado. La única diferencia respecto a mobile es que aquí los cilindros van **uno al lado del otro** (aprovechando el ancho horizontal). Y en las grillas de secciones, usar **3 cards** por fila donde el ancho lo permite. Sin tocar mobile portrait ni desktop.
+En el rango intermedio (teléfono landscape + tablet portrait + tablet landscape, 641–1120px) el `CatalogStage` se comporta como si fuera un móvil apaisado: mismo alto de contenedor, mismos cilindros a esa escala, y descripción corta (solo Nº y descriptor) debajo del cilindro derecho. El resto de la página fluye normalmente debajo.
 
-## Estado actual en ese rango (verificado con Playwright)
+## Cambios (solo `src/index.css`, aditivos)
 
-- El `.catalog-stage` usa el layout de desktop (columnas 55/45) → la botella hero queda cortada a la izquierda y el `line-indicator` se superpone.
-- Los chips DÍA/NOCHE/PIEL/... aparecen y estorban en un espacio donde no caben.
-- Las grillas de "Fragancias con presencia" y "Conjuntos" quedan en 1 columna (herencia del mobile) desaprovechando ancho.
-- El banner de cookies tapa las CTAs.
+### 1. Contenedor con altura tipo móvil apaisado
 
-## Cambios (solo `src/index.css`, sin tocar componentes)
-
-Nuevo bloque:
+Dentro del media intermedio, forzar:
 
 ```css
-@media (min-width: 641px) and (max-width: 1023.98px),
-       (orientation: landscape) and (max-height: 500px) and (max-width: 1023.98px) {
-  /* ...reglas... */
+.catalog-stage {
+  height: clamp(360px, 56vw, 440px);   /* proporción ~mobile landscape */
+  min-height: clamp(360px, 56vw, 440px);
+  max-height: 440px;
+  aspect-ratio: auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  padding: 48px 12px 12px;
+  overflow: hidden;
 }
 ```
 
-### A. Escenario principal — dos cilindros lado a lado
+Sale del `100svh` que hoy hace que en tablet el stage ocupe toda la pantalla. Debajo del stage la página sigue fluyendo (secciones, footer).
 
-- `.catalog-stage`: `grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto;` — columna izquierda = `BottleCarousel`, columna derecha = `TubeRack`, fila inferior (span 2) = descripción corta del perfume seleccionado.
-- `.line-indicator`: `display: none` (igual que mobile).
-- `.category-cylinder`, `.tube-cylinder-shell`: escalados para que quepan sin desbordar (`scale`/`max-height`).
-- `.active-tube-description`: visible con `número + familia + inspirado en` (versión compacta, sin el párrafo largo).
-- Botella activa e info del catálogo: `max-width` para que no se estire.
+### 2. Cilindros acotados al alto del contenedor
 
-### B. Grillas de sección — 3 cards por fila
+- `.selector-visual-stage` (col 1) y `.selector-panel` (col 2) ocupan solo la fila 2, `height: 100%`, `overflow: hidden`.
+- `.category-cylinder-shell { transform: scale(0.42); transform-origin: center }`.
+- `.tube-cylinder-shell`:
+  - `min-height: 0` (quitar el `min-height: clamp(...)` que hoy lo empuja).
+  - `height: 100%`.
+  - `--tube-item-width: clamp(100px, 20vw, 160px)`.
+  - `--tube-visual-half-width: clamp(50px, 10vw, 80px)`.
+  - Elimina la regla que lo hacía crecer de arriba a abajo del stage completo — ahora el stage ya no es 100svh.
 
-- `.ommi-featured-grid` (Destacados): `grid-template-columns: repeat(3, minmax(0, 1fr));` con `gap: 12px`.
-- `.conjuntos-banner-list` (Conjuntos): 3 columnas cuando `min-width: 720px`, si no, 2. El combo grande sigue full-width.
-- `.ommi-explore-grid`: 3 columnas.
+### 3. Descripción corta: SOLO Nº + descriptor, debajo del cilindro derecho
 
-### C. Chrome (header + cookie banner)
+Revertir el `position: absolute` que la ponía abajo-izquierda. Vuelve al flujo dentro de `.selector-panel`, justo debajo de `.tube-cylinder-shell`.
 
-- `.floating-header`: `padding-block` reducido para no comer alto en landscape.
-- `.cookie-consent`: en `max-height <= 520px`, pill compacto bottom-right (`max-width: 360px`), en vez de barra full-width que tapa CTAs.
+- `.selector-panel { position: relative; overflow: visible; flex-direction: column; justify-content: center; gap: 8px }`.
+- `.tube-cylinder-shell { position: relative }` (volver al default).
+- `.catalog-stage .active-tube-description`:
+  - `position: static` (quitar absolute).
+  - `text-align: center`, `padding: 4px 12px 0`, `gap: 2px`, `max-width: 100%`.
 
-## Verificación
+Ocultar todo lo que no sea número + descriptor:
+```css
+.catalog-stage .active-tube-description .active-tube-meta,
+.catalog-stage .active-tube-description p,
+.catalog-stage .active-tube-description span:not(.active-tube-number) {
+  display: none;
+}
+.catalog-stage .active-tube-description .active-tube-number { display: block; font-size: clamp(16px, 2.4vw, 22px) }
+.catalog-stage .active-tube-description strong { display: block; font-size: clamp(14px, 2vw, 20px) }
+```
 
-- Playwright a **667×375, 844×390, 1024×600, 820×1180**: dos cilindros visibles lado a lado, descripción corta debajo, sin chips, sin overflow, cookie banner discreto.
-- Screenshots antes/después a **375×667 (mobile portrait)** y **1440×900 (desktop)**: sin cambios visuales.
-- `bun run build` sin errores.
+Queda:
+```
+Nº7
+Floral oriental dulce
+```
 
-## Archivos afectados
+### 4. Sin chips de categoría
 
-- `src/index.css` únicamente.
+`.line-indicator { display: none }` — se mantiene.
 
-¿Aplico?
+### 5. Limpieza de overrides previos
+
+Eliminar del bloque intermedio:
+- `.catalog-stage > .selector-panel { position: static !important }`
+- `.catalog-stage .tube-cylinder-shell { position: static !important }`
+- Regla que estiraba `.active-tube-description` con `position: absolute; left: 12px; bottom: 12px; width: min(52%, 420px)`.
+
+### 6. Grids de secciones (sin cambios respecto a lo ya hecho)
+
+Se mantienen `.ommi-featured-grid`, `.ommi-explore-grid`, `.conjuntos-banner-list` a 3 columnas.
+
+### 7. Chrome
+
+`.floating-header` y `.ommi-cookie-bar` — sin cambios respecto a lo ya hecho.
+
+## Verificación (Playwright)
+
+Capturas a: 844×390 (mobile landscape referencia), 768×1024 (tablet portrait), 1024×600 (tablet landscape), 820×1180, y 375×667 + 1440×900 como control.
+
+Chequear en cada una:
+1. `.catalog-stage` alto ≈ 400px (no 100svh en tablet).
+2. Cilindro izquierdo (botellas) y cilindro derecho (tubos) visibles completos lado a lado.
+3. Debajo del cilindro derecho: solo "Nº7" y "Floral oriental dulce", centrado, 2 líneas.
+4. Debajo del stage, la página sigue con las secciones (ommi-featured, explore, etc.) a 3 columnas.
+5. Sin chips DÍA/NOCHE.
+6. Mobile portrait 375×667 y desktop 1440×900 sin cambios.
+
+## Archivos
+
+- `src/index.css` — único archivo modificado. Sin cambios en componentes React ni en data.
