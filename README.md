@@ -10,6 +10,12 @@ La intervención relaciona arquitectura de información, identidad visual e inte
 
 La implementación utiliza React, TypeScript y Vite, con Tailwind CSS y Motion para resolver estilos y movimiento.
 
+## Desarrollo y publicación
+
+La codificación se realiza principalmente en Visual Studio Code, con asistencia de Codex y del asistente de Lovable. Las decisiones de diseño, la revisión y la validación del resultado están a mi cargo.
+
+Lovable se utiliza también para facilitar la publicación y disponer de una dirección web desde la que explorar el proyecto.
+
 ## Mi aporte
 
 Definición de la experiencia digital, organización del recorrido de elección, comunicación visual, imágenes, contenidos y desarrollo asistido por IA.
