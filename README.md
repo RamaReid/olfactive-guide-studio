@@ -1,32 +1,34 @@
-# React + TypeScript + Vite
+# OMMI — Identidad y experiencia de elección
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+El proyecto aborda cómo presentar y ayudar a elegir fragancias en un entorno digital. La propuesta organiza el recorrido por ocasión, carácter e identidad, conectando la información del producto con referencias visuales que acompañan la elección.
 
-Currently, two official plugins are available:
+La web funciona como eje del proyecto: desde su estructura se articulan la presentación de las líneas, los contenidos, las imágenes y la comunicación de marca. El packaging y las demás piezas mantienen continuidad con esa experiencia.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Diseño e implementación
 
-## React Compiler
+La intervención relaciona arquitectura de información, identidad visual e interacción. La composición y las respuestas visuales del entorno acompañan la exploración de los productos, manteniendo coherencia entre las distintas líneas.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+La implementación utiliza React, TypeScript y Vite, con Tailwind CSS y Motion para resolver estilos y movimiento.
 
-## Expanding the Oxlint configuration
+## Mi aporte
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+Definición de la experiencia digital, organización del recorrido de elección, comunicación visual, imágenes, contenidos y desarrollo asistido por IA.
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Ver el proyecto
+
+[Explorar OMMI](https://ommirama.lovable.app/)
+
+## Cómo ejecutarlo
+
+Descargar el repositorio, instalar las dependencias y ejecutar:
+
+```sh
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Abrir la dirección local que indique Vite.
+
+## Autor
+
+Ramiro García Reid.
